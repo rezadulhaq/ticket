@@ -1,0 +1,17 @@
+[
+    {
+        "name": "FExB Talkshow + TROFI SNBT & SIMAK(11 Januari 2025)",
+        "price":10000,
+        "TicketId":1
+    },
+    {
+        "name": "FExB Talkshow + TROFI SNBT & SIMAK(18 Januari 2025)",
+        "price":20000,
+        "TicketId":2
+    },
+    {
+        "name": "TROFI SNBT & SIMAK",
+        "price":30000,
+        "TicketId":3
+    }
+]

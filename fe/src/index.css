@@ -1,0 +1,84 @@
+/* index.css */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles */
+@media (min-width: 640px) {
+  .bg-desktop {
+    background-image: url('https://ik.imagekit.io/x6p94nrv0m/LANDING%20PAGE%20-%20DESKTOP%20(1).png?updatedAt=1720113947735');
+  }
+}
+
+@media (max-width: 639px) {
+  .bg-mobile {
+    background-image: url('https://ik.imagekit.io/x6p94nrv0m/LOGIN%20PAGE%20-%20MOBILE%20(1).png?updatedAt=1720975715840');
+  }
+}
+
+.background {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.bg-gradient-custom {
+  background-image: linear-gradient(to right, #A357BB, #F088D9);
+}
+
+.background-mobile {
+  background-image: url('https://ik.imagekit.io/x6p94nrv0m/LOGIN%20PAGE%20-%20MOBILE.png?updatedAt=1720461996096');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.backround-login {
+  background-image: url('https://ik.imagekit.io/x6p94nrv0m/LOGIN%20PAGE%20-%20DESKTOP%20(1).png?updatedAt=1720543048768'); /* Update the path to the actual path of your image */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100%;
+  height: 100vh;
+}
+/*  */
+.backround-ticket {
+  background-image: url('https://ik.imagekit.io/x6p94nrv0m/CHOOSE%20TICKET%20PAGE%20-%20DESKTOP.png?updatedAt=1720551963335'); /* Update the path to the actual path of your image */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100%;
+  /* height: 1200px; */
+}
+.backround-payment {
+  background-image: url('https://ik.imagekit.io/x6p94nrv0m/FIX%20PAYMENT%20-%20DESKTOP.png?updatedAt=1720723279826'); /* Update the path to the actual path of your image */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100%;
+  
+}
+.backround-invoice {
+  background-image: url('https://ik.imagekit.io/x6p94nrv0m/INVOICE%20-%20DESKTOP.png?updatedAt=1720784842414'); /* Update the path to the actual path of your image */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100%;
+  height: 100vh;
+  
+}
+
+@font-face {
+  font-family: 'CustomFont';
+  src: url('./fonts/Blackriver-Bold.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'CircularStd';
+  src: url('./fonts/circular-std-medium-500.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+

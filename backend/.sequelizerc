@@ -1,0 +1,7 @@
+const path = require("path");
+
+module.exports = {
+    config: path.resolve("config", "config.js"), // Path ke config.js di dalam folder config
+    "models-path": path.resolve("models"), // Path langsung ke folder models di dalam direktori root
+    "migrations-path": path.resolve("migrations"), // Path langsung ke folder migrations di dalam direktori root
+};
