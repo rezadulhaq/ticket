@@ -6,15 +6,21 @@
         "color":"bg-[#8EDB8C]"
     },
     {
-        "price":77500,
-        "TicketId":1,
-        "CategoryId":2,
-        "color":"bg-[#8EDB8C]"
-    },
-    {
         "price":72500,
         "TicketId":2,
         "CategoryId":1,
+        "color":"bg-[#8EDB8C]"
+    },
+    {
+        "price":17500,
+        "TicketId":6,
+        "CategoryId":1,
+        "color":"bg-[#A82E9F]"
+    },
+    {
+        "price":77500,
+        "TicketId":1,
+        "CategoryId":2,
         "color":"bg-[#8EDB8C]"
     },
     {
@@ -35,12 +41,6 @@
         "TicketId":5,
         "CategoryId":2,
         "color":"bg-[#1070D1]"
-    },
-    {
-        "price":17500,
-        "TicketId":6,
-        "CategoryId":1,
-        "color":"bg-[#A82E9F]"
     },
     {
         "price":22500,

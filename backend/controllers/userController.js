@@ -17,7 +17,7 @@ class Controller {
             let data = await User.findAll();
 
             res.status(200).json(data);
-            console.log("test controller in static getUser");
+            console.log("test controller in static getUser", "<<<<<<<<<<<<<<<<<");
         } catch (error) {
             console.log(error);
         }
@@ -134,8 +134,8 @@ class Controller {
 
     static async loginUser(req, res, next) {
         try {
-            const { userName, password } = req.body;
-            const data = await User.findOne({ where: { userName } });
+            const { email, password } = req.body;
+            const data = await User.findOne({ where: { email } });
 
             if (!data) {
                 throw {
@@ -151,7 +151,7 @@ class Controller {
                 };
             }
 
-            const payload = { id: data.id, userName: data.userName };
+            const payload = { id: data.id, email: data.email };
 
             const accesstoken = createToken(payload);
 
