@@ -9,21 +9,20 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
-        type: Sequelize.STRING
+      CategoryId: {
+        type: Sequelize.INTEGER
       },
       price: {
         type: Sequelize.INTEGER
       },
       TicketId: {
-          type: Sequelize.INTEGER,
-          references: {
-              model: "Tickets",
-              key: "id",
-          },
+        type: Sequelize.INTEGER
       },
       isDeleted: {
         type: Sequelize.BOOLEAN
+      },
+      color: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

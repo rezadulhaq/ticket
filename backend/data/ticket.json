@@ -1,14 +1,42 @@
 [
     {
         "name": "FExB Talkshow + TROFI SNBT & SIMAK(11 Januari 2025)",
-        "quantity":10
+        "quantity":1
     },
     {
         "name": "FExB Talkshow + TROFI SNBT & SIMAK(18 Januari 2025)",
-        "quantity":10
+        "quantity":1
     },
     {
         "name": "TROFI SNBT & SIMAK",
-        "quantity":10
+        "quantity":1
+    },
+    {
+        "name": "FExB Non-Talkshow + TROFI SNBT & SIMAK (11 Januari 2025)",
+        "quantity":1
+    },
+    {
+        "name": "FExB Non-Talkshow + TROFI SNBT & SIMAK (18 Januari 2025)",
+        "quantity":1
+    },
+    {
+        "name": "TROFI SNBT & SIMAK",
+        "quantity":1
+    },
+    {
+        "name": "TROFI SNBT ONLY",
+        "quantity":1
+    },
+    {
+        "name": "Paket SEKAWAN FExB - 11 Januari 2025 (5 Tiket FExB Talkshow + TROFI SNBT & SIMAK)",
+        "quantity":5
+    },
+    {
+        "name": "Paket SEKAWAN FExB - 18 Januari 2025 (5 Tiket FExB Talkshow + TROFI SNBT & SIMAK)",
+        "quantity":5
+    },
+    {
+        "name": "Paket SEKAWAN TROFI (5 Tiket TROFI SNBT & SIMAK)",
+        "quantity":5
     }
 ]

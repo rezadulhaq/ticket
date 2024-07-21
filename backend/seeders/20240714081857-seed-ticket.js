@@ -15,6 +15,7 @@ module.exports = {
         const data = require("../data/ticket.json").map(function (el) {
             el.createdAt = new Date();
             el.updatedAt = new Date();
+            el.isDeleted = false;
             return el;
         });
         await queryInterface.bulkInsert("Tickets", data, {});

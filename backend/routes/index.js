@@ -14,6 +14,7 @@ router.delete("/user/:id", UserController.deleteUsersById);
 // router.use(authentication);
 
 router.get("/ticket", TicketController.getAllTicket);
+router.get("/category", TicketController.getAllCategoryTicket);
 router.post("/order", OrderController.createOrder);
 
 module.exports = router;

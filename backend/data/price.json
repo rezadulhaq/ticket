@@ -1,17 +1,75 @@
 [
     {
-        "name": "FExB Talkshow + TROFI SNBT & SIMAK(11 Januari 2025)",
-        "price":10000,
-        "TicketId":1
+        "price":72500,
+        "TicketId":1,
+        "CategoryId":1,
+        "color":"bg-[#8EDB8C]"
     },
     {
-        "name": "FExB Talkshow + TROFI SNBT & SIMAK(18 Januari 2025)",
-        "price":20000,
-        "TicketId":2
+        "price":77500,
+        "TicketId":1,
+        "CategoryId":2,
+        "color":"bg-[#8EDB8C]"
     },
     {
-        "name": "TROFI SNBT & SIMAK",
-        "price":30000,
-        "TicketId":3
+        "price":72500,
+        "TicketId":2,
+        "CategoryId":1,
+        "color":"bg-[#8EDB8C]"
+    },
+    {
+        "price":77500,
+        "TicketId":2,
+        "CategoryId":2,
+        "color":"bg-[#8EDB8C]"
+    },
+    
+    {
+        "price":72500,
+        "TicketId":4,
+        "CategoryId":2,
+        "color":"bg-[#1070D1]"
+    },
+    {
+        "price":72500,
+        "TicketId":5,
+        "CategoryId":2,
+        "color":"bg-[#1070D1]"
+    },
+    {
+        "price":17500,
+        "TicketId":6,
+        "CategoryId":1,
+        "color":"bg-[#A82E9F]"
+    },
+    {
+        "price":22500,
+        "TicketId":6,
+        "CategoryId":2,
+        "color":"bg-[#A82E9F]"
+    },
+    {
+        "price":17500,
+        "TicketId":7,
+        "CategoryId":2,
+        "color":"bg-[#A82E9F]"
+    },
+    {
+        "price":352500,
+        "TicketId":8,
+        "CategoryId":3,
+        "color":"bg-[#F4CD5C]"
+    },
+    {
+        "price":352500,
+        "TicketId":9,
+        "CategoryId":3,
+        "color":"bg-[#F4CD5C]"
+    },
+    {
+        "price":77500,
+        "TicketId":10,
+        "CategoryId":3,
+        "color":"bg-[#A82E9F]"
     }
 ]

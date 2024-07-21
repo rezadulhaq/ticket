@@ -12,13 +12,13 @@ module.exports = {
          *   isBetaMember: false
          * }], {});
          */
-        const data = require("../data/price.json").map(function (el) {
+        const data = require("../data/category.json").map(function (el) {
             el.createdAt = new Date();
             el.updatedAt = new Date();
             el.isDeleted = false;
             return el;
         });
-        await queryInterface.bulkInsert("TicketPrices", data, {});
+        await queryInterface.bulkInsert("Categories", data, {});
     },
 
     async down(queryInterface, Sequelize) {
@@ -28,6 +28,6 @@ module.exports = {
          * Example:
          * await queryInterface.bulkDelete('People', null, {});
          */
-        await queryInterface.bulkDelete("TicketPrices", null, {});
+        await queryInterface.bulkDelete("Categories", null, {});
     },
 };
