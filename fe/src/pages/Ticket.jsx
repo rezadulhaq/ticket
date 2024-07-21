@@ -37,6 +37,24 @@ const Tickets = () => {
         }));
     };
 
+    const handleBuyTickets = () => {
+        const selectedTickets = [];
+        for (const ticketId in ticketCounts) {
+            if (ticketCounts[ticketId] > 0) {
+                selectedTickets.push({
+                    id: ticketId,
+                    quantity: ticketCounts[ticketId],
+                });
+            }
+        }
+
+        // Simpan data sementara ke local storage
+        localStorage.setItem("selectedTickets", JSON.stringify(selectedTickets));
+
+        // Navigasi ke halaman /ticket-page
+        navigate("/ticket-page");
+    };
+
     return (
         <div className="sm:bg-desktopTicket bg-mobileTicket w-full h-auto bg-center bg-repeat bg-cover p-4 sm:p-8">
             <div className="max-w-4xl mx-auto flex flex-col">
@@ -111,7 +129,7 @@ const Tickets = () => {
 
                 <div className="text-center mt-8">
                     <button
-                        onClick={() => navigate("/ticket-page")}
+                        onClick={handleBuyTickets}
                         className="bg-gradient-custom sm:px-40 px-8 text-lg py-3 rounded-full font-bold shadow-lg text-white"
                     >
                         Buy Tickets
