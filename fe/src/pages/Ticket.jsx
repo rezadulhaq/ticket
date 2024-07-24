@@ -2,9 +2,19 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Tickets = () => {
+    // const navigate = useNavigate();
+    // const [ticketTypes, setTicketTypes] = useState([]);
+    // const [ticketCounts, setTicketCounts] = useState({});
+
+    const color1 = "bg-[#8EDB8C]";
+    const color2 = "bg-[#A82E9F]";
+    const color3 = "bg-[#1070D1]";
+    const color4 = "bg-[#F4CD5C]";
+
     const navigate = useNavigate();
     const [ticketTypes, setTicketTypes] = useState([]);
     const [ticketCounts, setTicketCounts] = useState({});
+    const [selectedTickets, setSelectedTickets] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -14,7 +24,7 @@ const Tickets = () => {
                     throw new Error("Failed to fetch data");
                 }
                 const data = await response.json();
-                setTicketTypes(data); 
+                setTicketTypes(data);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -37,22 +47,36 @@ const Tickets = () => {
         }));
     };
 
+    const getTicketDetail = (id) => {
+        let result = {};
+        ticketTypes.map(function (el) {
+            // console.log(el,"jaskajdka");
+            el.TicketPrices.map(function (element) {
+                if (element.id == id) {
+                    result = element;
+                }
+            });
+        });
+
+        console.log(result, "ini result");
+        return result;
+    };
+
     const handleBuyTickets = () => {
-        const selectedTickets = [];
+        const tickets = [];
         for (const ticketId in ticketCounts) {
             if (ticketCounts[ticketId] > 0) {
-                selectedTickets.push({
+                let data = getTicketDetail(ticketId);
+                tickets.push({
                     id: ticketId,
                     quantity: ticketCounts[ticketId],
+                    data,
                 });
             }
         }
-
-        // Simpan data sementara ke local storage
-        localStorage.setItem("selectedTickets", JSON.stringify(selectedTickets));
-
-        // Navigasi ke halaman /ticket-page
-        navigate("/ticket-page");
+        console.log(tickets, "=====================", ticketCounts);
+        setSelectedTickets(tickets);
+        navigate("/ticket-page", { state: { selectedTickets: tickets } });
     };
 
     return (
