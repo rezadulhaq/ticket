@@ -19,6 +19,7 @@ const LoginPage = () => {
     };
 
     const handleSubmit = async (e) => {
+        console.log("masuk");
         e.preventDefault();
         try {
             const response = await fetch("http://localhost:3000/user/login", {
@@ -28,11 +29,18 @@ const LoginPage = () => {
                 },
                 body: JSON.stringify(formData),
             });
+            console.log(response);
             if (!response.ok) {
                 throw new Error("Network response was not ok");
             }
             alert("Login successful!");
+            const responseJSON = await response.json();
+            console.log(responseJSON);
+            localStorage.setItem("access_token", responseJSON.accesstoken);
+            localStorage.setItem("UserId", responseJSON.UserId);
+
             navigate("/"); // Navigate to landing page on successful login
+            return { data: responseJSON };
         } catch (error) {
             console.error("Error:", error);
             // Handle error state if needed

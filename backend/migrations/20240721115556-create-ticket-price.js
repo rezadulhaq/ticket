@@ -10,13 +10,21 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       CategoryId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+            model: "Categories",
+            key: "id",
+        },
       },
       price: {
         type: Sequelize.INTEGER
       },
       TicketId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+            model: "Tickets",
+            key: "id",
+        },
       },
       isDeleted: {
         type: Sequelize.BOOLEAN

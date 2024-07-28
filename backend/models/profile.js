@@ -18,12 +18,15 @@ module.exports = (sequelize, DataTypes) => {
             highSchool: DataTypes.STRING,
             UserId: {
                 type: DataTypes.INTEGER,
-                references: {
-                    model: "Users",
-                    key: "id",
+                allowNull: false,
+                validate: {
+                    notNull: {
+                        msg: "UserId is Required",
+                    },
+                    notEmpty: {
+                        msg: "UserId is Required",
+                    },
                 },
-                onUpdate: "cascade",
-                onDelete: "cascade",
             },
             isDeleted: DataTypes.BOOLEAN,
         },

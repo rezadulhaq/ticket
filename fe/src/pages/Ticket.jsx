@@ -50,7 +50,6 @@ const Tickets = () => {
     const getTicketDetail = (id) => {
         let result = {};
         ticketTypes.map(function (el) {
-            // console.log(el,"jaskajdka");
             el.TicketPrices.map(function (element) {
                 if (element.id == id) {
                     result = element;
@@ -64,17 +63,25 @@ const Tickets = () => {
 
     const handleBuyTickets = () => {
         const tickets = [];
+        let temp = [];
         for (const ticketId in ticketCounts) {
             if (ticketCounts[ticketId] > 0) {
                 let data = getTicketDetail(ticketId);
-                tickets.push({
-                    id: ticketId,
+                console.log({ data });
+                const temp = new Array(
+                    ticketCounts[ticketId] * data?.Ticket?.quantity
+                ).fill({
+                    id: data?.id,
                     quantity: ticketCounts[ticketId],
                     data,
+                    ticket: {
+                        name: data?.Ticket?.name,
+                        type: data?.TicketId,
+                    },
                 });
+                tickets.push(...temp);
             }
         }
-        console.log(tickets, "=====================", ticketCounts);
         setSelectedTickets(tickets);
         navigate("/ticket-page", { state: { selectedTickets: tickets } });
     };

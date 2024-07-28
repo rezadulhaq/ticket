@@ -13,13 +13,51 @@ module.exports = (sequelize, DataTypes) => {
                 foreignKey: "TicketId",
                 // as: "ticket",
             });
+            TicketPrice.belongsTo(models.Category, {
+                foreignKey: "CategoryId",
+                // as: "ticket",
+            });
         }
     }
     TicketPrice.init(
         {
-            CategoryId: DataTypes.INTEGER,
-            price: DataTypes.INTEGER,
-            TicketId: DataTypes.INTEGER,
+            CategoryId: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                validate: {
+                    notNull: {
+                        msg: "CategoryId is Required",
+                    },
+                    notEmpty: {
+                        msg: "CategoryId is Required",
+                    },
+                },
+            },
+            price: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                validate: {
+                    notNull: {
+                        msg: "price is Required",
+                    },
+                    notEmpty: {
+                        msg: "price is Required",
+                    },
+                },
+            },
+            TicketId: {
+                type: DataTypes.INTEGER,
+
+                allowNull: false,
+                validate: {
+                    notNull: {
+                        msg: "TicketId is Required",
+                    },
+                    notEmpty: {
+                        msg: "TicketId is Required",
+                    },
+                },
+            },
             isDeleted: DataTypes.BOOLEAN,
             color: DataTypes.STRING,
         },

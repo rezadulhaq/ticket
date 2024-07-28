@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, redirect } from "react-router-dom";
 import LandingPage from "../pages/LandingPage";
 import LoginPage from "../pages/Login";
 import Register from "../pages/Register";
@@ -7,36 +7,62 @@ import TicketPage from "../pages/TikcetPayment";
 import Qr from "../pages/Qr";
 import Invoice from "../pages/Invoice";
 
+const checkAuth = () => {
+    const isAuthenticated = !!localStorage.getItem("access_token");
+    if (!isAuthenticated) {
+        return redirect("/login");
+    }
+    return null;
+};
 
 const router = createBrowserRouter([
     {
-        element : <LandingPage/>,
-        path : '/'
+        path: "/",
+        element: <LandingPage />,
+        loader: checkAuth,  // Add this loader if you want to restrict access
     },
     {
-        element : <LoginPage/>,
-        path : '/login'
+        path: "/buyticket",
+        element: <Tickets />,
+        loader: checkAuth,  // Add this loader to restrict access
     },
     {
-        element : <Register/>,
-        path : '/register'
+        path: "/ticket-page",
+        element: <TicketPage />,
+        loader: checkAuth,  // Add this loader to restrict access
     },
     {
-        element : <Tickets/>,
-        path : '/buyticket'
+        path: "/payment",
+        element: <Qr />,
+        loader: checkAuth,  // Add this loader to restrict access
     },
     {
-        element : <TicketPage/>,
-        path : '/ticket-page'
+        path: "/invoice",
+        element: <Invoice />,
+        loader: checkAuth,  // Add this loader to restrict access
     },
     {
-        element : <Qr/>,
-        path : '/payment'
+        path: "/login",
+        element: <LoginPage />,
+        loader: () => {
+            if (localStorage.getItem("access_token")) {
+                // Redirect to home if already logged in
+                return redirect("/");
+            }
+            return null;
+        },
     },
     {
-        element : <Invoice/>,
-        path : '/invoice'
-    }
-])
+        path: "/register",
+        element: <Register />,
+        loader: () => {
+            if (localStorage.getItem("access_token")) {
+                // Redirect to home if already logged in
+                return redirect("/");
+            }
+            return null;
+        },
+    },
+]);
 
-export default router
+export default router;

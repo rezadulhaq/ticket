@@ -17,7 +17,10 @@ class Controller {
             let data = await User.findAll();
 
             res.status(200).json(data);
-            console.log("test controller in static getUser", "<<<<<<<<<<<<<<<<<");
+            console.log(
+                "test controller in static getUser",
+                "<<<<<<<<<<<<<<<<<"
+            );
         } catch (error) {
             console.log(error);
         }
@@ -155,7 +158,7 @@ class Controller {
 
             const accesstoken = createToken(payload);
 
-            res.status(200).json(accesstoken);
+            res.status(200).json({ accesstoken, UserId: data.id });
             // await
         } catch (error) {
             console.log(error);

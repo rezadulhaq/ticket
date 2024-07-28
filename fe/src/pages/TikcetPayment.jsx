@@ -1,58 +1,65 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { AiOutlineUser } from "react-icons/ai";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const TicketPage = () => {
     const location = useLocation();
     const selectedTickets = location.state?.selectedTickets || [];
+    const filteredTickets = Object.values(
+        selectedTickets.reduce((acc, obj) => {
+            if (!acc[obj.id]) {
+                acc[obj.id] = obj;
+            }
+            return acc;
+        }, {})
+    );
 
     const [activeSection, setActiveSection] = useState(1);
-    // const [selectedTickets, setSelectedTickets] = useState([]);
-    const [buyerInfos, setBuyerInfos] = useState([]);
-    const [totalTicket, setTotalTicket] = useState([]);
+    const formDataRefs = useRef(
+        selectedTickets.map((item) => ({
+            TicketPriceId: item.id,
+            fullName: "",
+            idLine: "",
+            phoneNumber: "",
+            email: "",
+            highSchool: "",
+        }))
+    );
+
+    const [totalTicket, setTotalTicket] = useState(0);
     const [ticket, setTicket] = useState([]);
     const [allTicket, setAllTicket] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log(selectedTickets, "<<<<<<<<<<<yyyy");
         let dataTicket = [];
-        // const fetchData = async (id) => {
-        //     try {
-        //         const response = await fetch(
-        //             "http://localhost:3000/ticket/" + id
-        //         );
-        //         if (!response.ok) {
-        //             throw new Error("Failed to fetch data");
-        //         }
-        //         const data = await response.json();
-        //         return data;
-        //     } catch (error) {
-        //         console.error("Error fetching data:", error);
-        //     }
-        // };
-        // const storedTickets =
-        //     JSON.parse(localStorage.getItem("selectedTickets")) || [];
-        // setSelectedTickets(storedTickets);
         let countTicket = 0;
-        selectedTickets.map(async function (el) {
-            let data;
-            data = el.data;
+        selectedTickets.forEach((el) => {
+            let data = el.data;
             data.quantity = el.quantity;
             dataTicket.push(data);
             countTicket += el.quantity * el.data.Ticket.quantity;
         });
 
         setTotalTicket(countTicket);
-        setAllTicket(dataTicket);
-    }, []);
-    console.log(allTicket, "<<<<<<<<<<<<");
+        setAllTicket(formTicket(dataTicket));
+    }, [selectedTickets, location]);
 
-    const handleSectionToggle = (section) => {
-        setActiveSection(activeSection === section ? null : section);
-    };
+    function formTicket(allTicket) {
+        let arr = [];
+        allTicket.forEach((el) => {
+            let countTicket = el.Ticket.quantity * el.quantity;
+            for (let index = 0; index < countTicket; index++) {
+                let obj = {
+                    name: el.Ticket.name,
+                    type: el.Ticket.id,
+                };
+                arr.push(obj);
+            }
+        });
+        return arr;
+    }
 
     const rupiah = (number) => {
         return new Intl.NumberFormat("id-ID", {
@@ -63,65 +70,49 @@ const TicketPage = () => {
 
     const getSubTotal = () => {
         let price = 0;
-        selectedTickets.map(function (ticket) {
+        filteredTickets.forEach((ticket) => {
             price += ticket.quantity * ticket.data.price;
         });
         return price;
     };
 
     const getTotal = () => {
-        return getSubTotal() - 2500;
-    };
-
-    const handleBuyerFormSubmit = (ticketId, formData) => {
-        const updatedBuyerInfos = [...buyerInfos];
-        updatedBuyerInfos[ticketId - 1] = formData;
-        setBuyerInfos(updatedBuyerInfos);
+        return getSubTotal() - selectedTickets.length * 2500;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         const payload = {
-            userId: 1, // Ganti dengan userID yang sesuai
-            orderDetails: buyerInfos.map((buyerInfo, index) => ({
-                TicketPriceId: selectedTickets[index].id,
-                OrderId: 1, // Ganti dengan orderID yang sesuai
-                lineId: buyerInfo.idLine,
-                fullName: buyerInfo.name,
-                email: buyerInfo.email,
-                phoneNumber: buyerInfo.phone,
-                highSchool: buyerInfo.highschool,
+            userId: localStorage.getItem("UserId"),
+            orderDetails: formDataRefs.current.map((item, index) => ({
+                TicketPriceId: item.TicketPriceId,
+                lineId: item.idLine,
+                fullName: item.fullName,
+                email: item.email,
+                phoneNumber: item.phoneNumber,
+                highSchool: item.highSchool,
             })),
         };
 
+        console.log({ formDataRefs, payload });
         try {
-            const response = await axios.post("url_ke_server_anda", payload);
+            const response = await axios.post(
+                "http://localhost:3000/order/",
+                payload
+            );
             console.log("Order created successfully:", response.data);
-
             navigate("/payment");
         } catch (error) {
             console.error("Error creating order:", error);
         }
     };
 
-    const BuyerForm = ({ handleBuyerFormSubmit }) => {
+    const BuyerForm = ({ ticket, ticketIndex, formDataRef }) => {
         const [showForm, setShowForm] = useState(false);
 
         const toggleForm = () => {
-            setShowForm(!showForm);
-        };
-
-        const handleFormSubmit = (e) => {
-            e.preventDefault();
-            const formData = {
-                name: e.target.name.value,
-                idLine: e.target.idLine.value,
-                email: e.target.email.value,
-                phone: e.target.phone.value,
-                highschool: e.target.highschool.value,
-            };
-            handleBuyerFormSubmit(formData);
+            setShowForm((prev) => !prev);
         };
 
         return (
@@ -131,6 +122,7 @@ const TicketPage = () => {
                         <AiOutlineUser className="mr-2" />
                         Buyer Info
                     </h2>
+                    <p>{ticket.ticket.name}</p>
                     <button
                         className="text-lg text-blue-600 font-semibold focus:outline-none"
                         onClick={toggleForm}
@@ -139,78 +131,142 @@ const TicketPage = () => {
                     </button>
                 </div>
                 {showForm && (
-                    <form
-                        className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-10 py-6"
-                        onSubmit={handleFormSubmit}
-                    >
+                    <form className="grid grid-cols-1 sm:grid-cols-2 gap-4 px-10 py-6">
                         <div className="col-span-1">
-                            <label htmlFor="name" className="block">
+                            <label
+                                htmlFor={`name-${ticketIndex}`}
+                                className="block"
+                            >
                                 Name
                             </label>
                             <input
-                                id="name"
-                                name="name"
+                                id={`name-${ticketIndex}`}
+                                name="fullName"
                                 type="text"
+                                defaultValue={
+                                    formDataRef.current[ticketIndex].fullName ||
+                                    ""
+                                }
+                                onChange={(e) =>
+                                    (formDataRef.current[ticketIndex].fullName =
+                                        e.target.value)
+                                }
                                 className="w-full px-4 py-2 border rounded"
+                                style={{
+                                    color: "black",
+                                    backgroundColor: "white",
+                                }}
                                 required
                             />
                         </div>
                         <div className="col-span-1">
-                            <label htmlFor="idLine" className="block">
+                            <label
+                                htmlFor={`idLine-${ticketIndex}`}
+                                className="block"
+                            >
                                 ID Line
                             </label>
                             <input
-                                id="idLine"
+                                id={`idLine-${ticketIndex}`}
                                 name="idLine"
                                 type="text"
+                                defaultValue={
+                                    formDataRef.current[ticketIndex].idLine ||
+                                    ""
+                                }
+                                onChange={(e) =>
+                                    (formDataRef.current[ticketIndex].idLine =
+                                        e.target.value)
+                                }
                                 className="w-full px-4 py-2 border rounded"
+                                style={{
+                                    color: "black",
+                                    backgroundColor: "white",
+                                }}
                                 required
                             />
                         </div>
                         <div className="col-span-1">
-                            <label htmlFor="phone" className="block">
+                            <label
+                                htmlFor={`phone-${ticketIndex}`}
+                                className="block"
+                            >
                                 Phone Number
                             </label>
                             <input
-                                id="phone"
-                                name="phone"
+                                id={`phone-${ticketIndex}`}
+                                name="phoneNumber"
                                 type="text"
+                                defaultValue={
+                                    formDataRef.current[ticketIndex]
+                                        .phoneNumber || ""
+                                }
+                                onChange={(e) =>
+                                    (formDataRef.current[
+                                        ticketIndex
+                                    ].phoneNumber = e.target.value)
+                                }
                                 className="w-full px-4 py-2 border rounded"
+                                style={{
+                                    color: "black",
+                                    backgroundColor: "white",
+                                }}
                                 required
                             />
                         </div>
                         <div className="col-span-1">
-                            <label htmlFor="email" className="block">
+                            <label
+                                htmlFor={`email-${ticketIndex}`}
+                                className="block"
+                            >
                                 Email
                             </label>
                             <input
-                                id="email"
+                                id={`email-${ticketIndex}`}
                                 name="email"
                                 type="email"
+                                defaultValue={
+                                    formDataRef.current[ticketIndex].email || ""
+                                }
+                                onChange={(e) =>
+                                    (formDataRef.current[ticketIndex].email =
+                                        e.target.value)
+                                }
                                 className="w-full px-4 py-2 border rounded"
+                                style={{
+                                    color: "black",
+                                    backgroundColor: "white",
+                                }}
                                 required
                             />
                         </div>
                         <div className="col-span-1">
-                            <label htmlFor="highschool" className="block">
+                            <label
+                                htmlFor={`highschool-${ticketIndex}`}
+                                className="block"
+                            >
                                 Highschool
                             </label>
                             <input
-                                id="highschool"
-                                name="highschool"
+                                id={`highschool-${ticketIndex}`}
+                                name="highSchool"
                                 type="text"
+                                defaultValue={
+                                    formDataRef.current[ticketIndex]
+                                        .highSchool || ""
+                                }
+                                onChange={(e) =>
+                                    (formDataRef.current[
+                                        ticketIndex
+                                    ].highSchool = e.target.value)
+                                }
                                 className="w-full px-4 py-2 border rounded"
+                                style={{
+                                    color: "black",
+                                    backgroundColor: "white",
+                                }}
                                 required
                             />
-                        </div>
-                        {/* Submit Button */}
-                        <div className="col-span-2 sm:col-span-1 flex justify-end">
-                            <button
-                                type="submit"
-                                className="bg-gradient-custom px-8 text-lg py-1.5 rounded-full font-bold shadow-lg mt-4"
-                            >
-                                Submit
-                            </button>
                         </div>
                     </form>
                 )}
@@ -240,17 +296,17 @@ const TicketPage = () => {
                 </div>
 
                 {/* Ticket Details Section */}
-                <div className="pb-5 bg-blue-950 rounded-lg mb-8 w-full bg-cover text-white">
-                    <div className="bg-gradient-custom px-10 py-1 mb-2 rounded-t-lg">
+                <div className="pb-5 bg-blue-950 rounded-lg text-white shadow-md">
+                    <div className="p-5">
                         <h2 className="text-2xl font-bold flex items-center">
                             <AiOutlineUser className="mr-2" />
                             Ticket Info
                         </h2>
                     </div>
                     <div className="mb-4 mt-2 ml-4 sm:ml-10 mr-4 sm:mr-10">
-                        {selectedTickets.map((ticket) => (
+                        {filteredTickets.map((ticket, index) => (
                             <div
-                                key={ticket.id}
+                                key={index}
                                 className="flex justify-between items-center border-b border-gray-300 py-2"
                             >
                                 <div className="w-2/3">
@@ -303,7 +359,8 @@ const TicketPage = () => {
                                     DISCOUNT
                                 </h3>
                                 <button className="bg-gradient-custom px-14 text-lg py-3 rounded-full font-bold shadow-lg">
-                                    (25.000)
+                                    {/* referal code akan sama mendapatkan discount 2.500, jd gajadi hanya 100 orang pertama  */}
+                                    {rupiah(selectedTickets.length * 2500)}
                                 </button>
                             </div>
                             <div className="flex flex-col items-center">
@@ -318,141 +375,42 @@ const TicketPage = () => {
                     </div>
                 </div>
 
-                {/* Buyer Info Section */}
-                <div className="relative text-center mb-12">
-                    <div
-                        className="absolute inset-0 flex items-center justify-center z-0"
-                        style={{
-                            backgroundImage:
-                                "url('https://ik.imagekit.io/x6p94nrv0m/scroll-01%202.png?updatedAt=1720551838052')",
-                            backgroundSize: "contain",
-                            backgroundRepeat: "no-repeat",
-                            backgroundPosition: "center",
-                            height: "120px",
-                        }}
-                    ></div>
-                    <h1 className="relative text-3xl sm:text-[40px] pt-10 font-custom font-bold text-black z-10">
-                        Buyer Info
-                    </h1>
+                {/* Summary Section */}
+                <div className="bg-gray-200 text-black rounded-lg shadow-md mb-8 p-6">
+                    <h2 className="text-2xl font-bold mb-4">Summary</h2>
+                    <div className="flex justify-between mb-2">
+                        <span>Subtotal:</span>
+                        <span>{rupiah(getSubTotal())}</span>
+                    </div>
+                    <div className="flex justify-between mb-2">
+                        <span>Discount:</span>
+                        <span>-{rupiah(selectedTickets.length * 2500)}</span>
+                    </div>
+                    <div className="flex justify-between font-bold">
+                        <span>Total:</span>
+                        <span>{rupiah(getTotal())}</span>
+                    </div>
                 </div>
 
-                <div className="mx-auto p-4">
-                    <div className="flex flex-col lg:flex-row justify-center items-center">
-                        {/* Buyer Info Section */}
-                        <div className="flex w-full flex-col lg:flex-row">
-                            <div className="w-full lg:w-2/3 mx-auto p-4 flex flex-wrap gap-4">
-                                {(() => {
-                                    const elements = [];
-                                    for (let i = 0; i < totalTicket; i++) {
-                                        // const ticket = selectedTickets[i];
-                                        elements.push(<BuyerForm key={i} />);
-                                    }
-                                    return elements;
-                                })()}
-                            </div>
+                {/* Buyer Information Section */}
+                {selectedTickets.map((ticket, index) => (
+                    <BuyerForm
+                        key={index}
+                        ticket={ticket}
+                        ticketIndex={index}
+                        formDataRef={formDataRefs}
+                        // onFormDataChange={handleBuyerFormChange}
+                    />
+                ))}
 
-                            {/* Payment Method Section */}
-                            <div className="w-full lg:w-1/3    ">
-                                <div className="bg-gradient-custom py-1.5 rounded-t-lg bg-[rgb(21,44,103)]">
-                                    <h2 className="text-2xl font-bold text-center text-white">
-                                        Payment Method
-                                    </h2>
-                                </div>
-                                <form className="px-6 pt-5 bg-[rgb(21,44,103)] p-4 shadow-md rounded-lg text-white">
-                                    <div className="mb-4">
-                                        <input
-                                            type="radio"
-                                            id="virtual-accounts"
-                                            name="payment-method"
-                                            value="virtual-accounts"
-                                        />
-                                        <label
-                                            htmlFor="virtual-accounts"
-                                            className="ml-2"
-                                        >
-                                            Virtual Accounts
-                                        </label>
-                                    </div>
-                                    <div className="mb-4">
-                                        <input
-                                            type="radio"
-                                            id="credit-debit"
-                                            name="payment-method"
-                                            value="credit-debit"
-                                        />
-                                        <label
-                                            htmlFor="credit-debit"
-                                            className="ml-2"
-                                        >
-                                            Credit/Debit Card
-                                        </label>
-                                    </div>
-                                    <div className="mb-4">
-                                        <input
-                                            type="radio"
-                                            id="e-wallets"
-                                            name="payment-method"
-                                            value="e-wallets"
-                                        />
-                                        <label
-                                            htmlFor="e-wallets"
-                                            className="ml-2"
-                                        >
-                                            E-Wallets
-                                        </label>
-                                    </div>
-                                    <div className="mb-4">
-                                        <input
-                                            type="radio"
-                                            id="qris"
-                                            name="payment-method"
-                                            value="qris"
-                                        />
-                                        <label htmlFor="qris" className="ml-2">
-                                            QRIS
-                                        </label>
-                                    </div>
-                                    <div className="mb-4">
-                                        <input
-                                            type="radio"
-                                            id="direct-debit"
-                                            name="payment-method"
-                                            value="direct-debit"
-                                        />
-                                        <label
-                                            htmlFor="direct-debit"
-                                            className="ml-2"
-                                        >
-                                            Direct Debit
-                                        </label>
-                                    </div>
-                                    <div className="mb-4">
-                                        <input
-                                            type="radio"
-                                            id="paylater"
-                                            name="payment-method"
-                                            value="paylater"
-                                        />
-                                        <label
-                                            htmlFor="paylater"
-                                            className="ml-2"
-                                        >
-                                            Paylater
-                                        </label>
-                                    </div>
-                                    <div className="mt-8 flex justify-end mr-4 sm:mr-16">
-                                        {/* Continue Payment Button */}
-                                        <button
-                                            onClick={handleSubmit}
-                                            className="bg-gradient-custom font-bold font-customText text-lg  rounded-[20px] text-white py-2 px-7"
-                                        >
-                                            Continue Payment
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+                {/* Submit Button */}
+                <div className="text-center">
+                    <button
+                        className="bg-gradient-custom px-14 text-lg py-3 rounded-full font-bold shadow-lg"
+                        onClick={handleSubmit}
+                    >
+                        Continue Payment
+                    </button>
                 </div>
             </div>
         </div>
