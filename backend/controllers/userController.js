@@ -139,6 +139,7 @@ class Controller {
         try {
             const { email, password } = req.body;
             const data = await User.findOne({ where: { email } });
+            console.log({data})
 
             if (!data) {
                 throw {
@@ -146,7 +147,7 @@ class Controller {
                 };
             }
 
-            const compare = compareHash(password, data.password);
+            const compare = compareHash(password, data?.password);
 
             if (!compare) {
                 throw {
