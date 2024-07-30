@@ -85,6 +85,7 @@ const TicketPage = () => {
 
         const payload = {
             userId: localStorage.getItem("UserId"),
+            totalPrice: getTotal(),
             orderDetails: formDataRefs.current.map((item, index) => ({
                 TicketPriceId: item.TicketPriceId,
                 lineId: item.idLine,
@@ -95,14 +96,15 @@ const TicketPage = () => {
             })),
         };
 
-        console.log({ formDataRefs, payload });
+        console.log({payload})
+        
         try {
             const response = await axios.post(
-                "http://localhost:3000/order/",
+                "http://localhost:3000/create-qr-code/",
                 payload
             );
             console.log("Order created successfully:", response.data);
-            navigate("/payment");
+            navigate("/payment", { state: { data:response.data } });
         } catch (error) {
             console.error("Error creating order:", error);
         }
