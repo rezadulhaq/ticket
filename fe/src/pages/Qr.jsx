@@ -1,7 +1,11 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
+import QRCode from "react-qr-code";
 
 export default function Qr() {
+  const location = useLocation();
+  const qrData = location.state?.data || [];
+  console.log({qrData})
   const navigate = useNavigate()
   return (
     <div className="backround-payment h-screen  ">      
@@ -15,7 +19,8 @@ export default function Qr() {
               backgroundPosition: "center",
               height : '120px'
             }}
-          ></div>
+          >
+          </div>
           <h1 className="relative text-[50px] font-bold pt-6 text-black font-custom z-10">
             Payment
           </h1>
@@ -24,7 +29,8 @@ export default function Qr() {
         <div className="relative p-2 rounded-3xl">
         <div className="absolute inset-0 bg-gradient-to-b from-pink-200 to-blue-300 rounded-[70px] ">
         </div>
-        <div className="relative bg-blue-100 rounded-[70px] p-6 w-80 h-72">
+        <div className="relative bg-blue-100 flex items-center justify-center rounded-[70px] p-6 w-80 h-72">
+          <QRCode value={qrData?.qr_string} size={236}/>
         </div>
       </div>
       <div className=' mt-8'>
