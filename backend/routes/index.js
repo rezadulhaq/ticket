@@ -18,5 +18,6 @@ router.get("/ticket/:id", TicketController.getTicketById);
 router.get("/category", TicketController.getAllCategoryTicket);
 router.post("/order", OrderController.createOrder);
 router.post("/api/create-payment", OrderController.paymentGateWay);
+router.get("/api/generateQR", OrderController.generateQRCode);
 
 module.exports = router;

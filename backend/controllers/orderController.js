@@ -14,25 +14,47 @@ const {
     OrderDetail,
 } = require("../models/index");
 
-class Controller {
+const QRCode = require("qrcode");
 
-    static async paymentGateWay(req, res, next){
+class Controller {
+    static async generateQRCode(req, res, next) {
+        const qrString = "some-random-qr-string";
+
+        try {
+            // Generate QR code
+            const qrCodeImage = await QRCode.toBuffer(qrString);
+
+            // Set response headers
+            res.setHeader("Content-Type", "image/png");
+            res.setHeader(
+                "Content-Disposition",
+                'inline; filename="qrcode.png"'
+            );
+
+            // Send QR code image as response
+            res.send(qrCodeImage);
+        } catch (err) {
+            res.status(500).send("Error generating QR code");
+        }
+    }
+
+    static async paymentGateWay(req, res, next) {
         try {
             const { amount, email } = req.body; // Ambil informasi dari permintaan
-    
+
             const invoiceData = {
                 external_id: `invoice_${Date.now()}`,
                 amount,
                 payer_email: email,
-                description: 'Payment for ticket purchase',
+                description: "Payment for ticket purchase",
             };
-    
+
             const createdInvoice = await invoice.createInvoice(invoiceData);
-    
+
             res.json({ invoiceUrl: createdInvoice.invoice_url });
         } catch (error) {
             console.error(error);
-            res.status(500).json({ error: 'Failed to create payment' });
+            res.status(500).json({ error: "Failed to create payment" });
         }
     }
 
@@ -41,11 +63,14 @@ class Controller {
         const { userId, orderDetails } = req.body;
         try {
             console.log({ userId, orderDetails });
+
+            // Verifikasi keberadaan user
             const user = await User.findByPk(userId);
             if (!user) {
                 return res.status(404).json({ error: "User tidak ditemukan" });
             }
 
+            // Buat order
             const order = await Order.create(
                 { UserId: userId },
                 { transaction: t }
@@ -63,13 +88,31 @@ class Controller {
                 } = detail;
 
                 TicketPriceId = +TicketPriceId;
+
+                // Temukan TicketPrice
                 const ticket = await TicketPrice.findByPk(TicketPriceId);
                 if (!ticket) {
+                    await t.rollback();
                     return res.status(404).json({
                         error: `Tiket dengan id ${TicketPriceId} tidak ditemukan`,
                     });
                 }
 
+                // Periksa apakah ada tiket yang tersedia
+                if (ticket.totalTicket <= 0) {
+                    await t.rollback();
+                    return res.status(400).json({
+                        error: `Tiket dengan id ${TicketPriceId} sudah habis`,
+                    });
+                }
+
+                // Kurangi totalTicket
+                await TicketPrice.update(
+                    { totalTicket: ticket.totalTicket - 1 },
+                    { where: { id: TicketPriceId }, transaction: t }
+                );
+
+                // Buat OrderDetail
                 const orderDetail = await OrderDetail.create(
                     {
                         lineId,
@@ -86,6 +129,7 @@ class Controller {
                 createdOrderDetails.push(orderDetail);
             }
 
+            // Commit transaksi
             await t.commit();
             res.status(201).json({
                 message: "Order Berhasil",
@@ -93,6 +137,8 @@ class Controller {
                 orderDetails: createdOrderDetails,
             });
         } catch (error) {
+            // Rollback transaksi jika terjadi error
+            if (t) await t.rollback();
             res.status(500).json({ error: "error" });
         }
     }
