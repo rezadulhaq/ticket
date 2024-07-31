@@ -1,7 +1,7 @@
 const { where } = require("sequelize");
 const { hashPassword, compareHash } = require("../helpers/bycript");
 const { decodedToken, createToken } = require("../helpers/jwt");
-const axios = require('axios');
+const axios = require("axios");
 
 const {
     Buyer,
@@ -13,24 +13,24 @@ const {
     UserTicket,
     sequelize,
 } = require("../models/index");
-
+const { v4: uuidv4 } = require("uuid");
 
 // move this function if it will be used by multiple controller
 function getConfig(method, data) {
     return {
-      method: method,
-      url: 'https://api.xendit.co/qr_codes',
-      headers: { 
-        'api-version': '2022-07-31',
-        'Content-Type': 'application/json'
-      },
-      auth: {
-        username: process.env.XENDIT_SECRET_KEY,
-        password: ''
-      },
-      data: data
+        method: method,
+        url: "https://api.xendit.co/qr_codes",
+        headers: {
+            "api-version": "2022-07-31",
+            "Content-Type": "application/json",
+        },
+        auth: {
+            username: process.env.XENDIT_SECRET_KEY,
+            password: "",
+        },
+        data: data,
     };
-  }
+}
 
 class Controller {
     static async getAllCategoryTicket(req, res, next) {
@@ -110,21 +110,21 @@ class Controller {
     }
 
     // move this to other controller soon
-    static async createQRCode(req, res){
-        try{
-            
-            const {userId, totalPrice,orderDetails,} = req.body
-            console.log({orderDetails})
+    static async createQRCode(req, res) {
+        try {
+            const { userId, totalPrice, orderDetails } = req.body;
+            console.log({ orderDetails });
+            let random = Math.floor(Math.random() * 1000);
             const data = {
-                reference_id: "order-id-1666420204",
+                reference_id: uuidv4(),
                 type: "DYNAMIC",
                 currency: "IDR",
                 amount: totalPrice,
             };
             const response = await axios(getConfig("POST", data));
             res.status(200).json(response.data);
-        }catch(error){
-            console.log(error)
+        } catch (error) {
+            console.log(error);
         }
     }
 }
