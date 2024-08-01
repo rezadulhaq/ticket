@@ -108,6 +108,7 @@ const TicketPage = () => {
         const payload = {
             userId: localStorage.getItem("UserId"),
             totalPrice: getTotal(),
+            ticketdata : filteredTickets,
             orderDetails: formDataRefs.current.map((item, index) => ({
                 TicketPriceId: item.TicketPriceId,
                 lineId: item.idLine,

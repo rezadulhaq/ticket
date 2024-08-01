@@ -9,26 +9,44 @@ export default function Qr() {
     const qrData = location.state?.data || {};
     const [paymentStatus, setPaymentStatus] = useState("pending"); // Set initial status to 'pending'
     const [intervalId, setIntervalId] = useState(null);
-
+    // const [data, setData] = useState([]);
+    
     const handlePaymentSuccess = () => {
         navigate("/invoice", {
             state: {
-                invoiceData: qrData.invoiceData,
-                dataTicket: qrData.dataTicket,
+                invoiceData: qrData
             },
         });
     };
-
+console.log(qrData);
     useEffect(() => {
-        // console.log(qrData, "<<<<<<<");
         const checkPaymentStatus = async () => {
             try {
                 const response = await axios.get(
                     `http://localhost:3000/api/check-payment-status?qrCodeId=${qrData.id}`
                 );
+                // setData(response.data);
+                // console.log(response.data);
                 if (response.data.status === "INACTIVE") {
+                    let dataUser = {
+                        userId: localStorage.getItem("UserId"),
+                        orderDetails: qrData.dataTicket,
+                    };
+                    // const responsePostOrder = await fetch(
+                    //     "http://localhost:3000/order",
+                    //     {
+                    //         method: "POST",
+                    //         headers: {
+                    //             "Content-Type": "application/json",
+                    //         },
+                    //         body: JSON.stringify(dataUser),
+                    //     }
+                    // );
+                    // if (!responsePostOrder.ok) {
+                    //     throw new Error("Network response was not ok");
+                    // }
                     setPaymentStatus("INACTIVE");
-                    handlePaymentSuccess();
+                    handlePaymentSuccess(); // Trigger navigation on successful payment
                     clearInterval(intervalId);
                 }
             } catch (error) {
@@ -40,10 +58,10 @@ export default function Qr() {
         setIntervalId(id);
 
         return () => clearInterval(id);
-    }, [qrData.transactionId]);
+    }, [qrData.id]);
 
     return (
-        <div className="background-payment h-screen">
+        <div className="backround-payment h-screen">
             <div className="relative text-center mb-8">
                 <div
                     className="absolute inset-0 flex items-center justify-center z-0"

@@ -1,39 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { jsPDF } from "jspdf";
 import QRCode from "qrcode";
+import { useLocation } from "react-router-dom";
 
 export default function Invoice() {
-    const qrData = location.state?.data || {};
-    console.log(qrData, "<<<<<<<<<<<<<<<<<");
-    const invoiceData = {
-        name: "John Doe",
-        orderNumber: "INV123456",
-        orderDate: "2024-08-01",
-        tickets: [
-            { type: "VIP", quantity: 1, price: 100 },
-            { type: "Regular", quantity: 2, price: 50 },
-            { type: "VIP", quantity: 1, price: 100 },
-            { type: "Regular", quantity: 2, price: 50 },
-            { type: "VIP", quantity: 1, price: 100 },
-            { type: "Regular", quantity: 2, price: 50 },
-            { type: "VIP", quantity: 1, price: 100 },
-            { type: "Regular", quantity: 2, price: 50 },
-            { type: "VIP", quantity: 1, price: 100 },
-            { type: "Regular", quantity: 2, price: 50 },
-            { type: "VIP", quantity: 1, price: 100 },
-            { type: "Regular", quantity: 2, price: 50 },
-            { type: "VIP", quantity: 1, price: 100 },
-            { type: "Regular", quantity: 2, price: 50 },
-            { type: "VIP", quantity: 1, price: 100 },
-            { type: "Regular", quantity: 2, price: 50 },
-            { type: "VIP", quantity: 1, price: 100 },
-            { type: "Regular", quantity: 2, price: 50 },
-            { type: "VIP", quantity: 1, price: 100 },
-            { type: "Regular", quantity: 2, price: 50 },
-        ],
-    };
+    const location = useLocation();
+    const { invoiceData = {} } = location.state || {};
+
+    useEffect(() => {
+        console.log(invoiceData, "<<<<<<<<<<<<<<<<<");
+    }, [invoiceData]);
 
     const generatePDF = async () => {
+        if (!invoiceData.tickets) {
+            console.error("No tickets data available to generate PDF.");
+            return;
+        }
+
         const doc = new jsPDF("p", "pt", "a4");
         const margin = 30;
         const ticketWidth = 500;
@@ -71,23 +54,23 @@ export default function Invoice() {
             doc.setFont("Arial", "normal");
 
             // Biodata section
-            doc.text(`Name: ${invoiceData.name}`, margin + 20, yOffset + 80);
+            doc.text(`Name: ${invoiceData.name || "N/A"}`, margin + 20, yOffset + 80);
             doc.text(
-                `Order Number: ${invoiceData.orderNumber}`,
+                `Order Number: ${invoiceData.orderNumber || "N/A"}`,
                 margin + 20,
                 yOffset + 100
             );
             doc.text(
-                `Order Date: ${invoiceData.orderDate}`,
+                `Order Date: ${invoiceData.orderDate || "N/A"}`,
                 margin + 20,
                 yOffset + 120
             );
-            doc.text(`Ticket Type: ${ticket.type}`, margin + 20, yOffset + 140);
+            doc.text(`Ticket Type: ${ticket.type || "N/A"}`, margin + 20, yOffset + 140);
 
             // Add QR code
             try {
                 const qrCodeDataUrl = await QRCode.toDataURL(
-                    `${invoiceData.orderNumber}-${ticket.type}`
+                    `${invoiceData.orderNumber || "N/A"}-${ticket.type || "N/A"}`
                 );
                 const base64ImageData = qrCodeDataUrl.split(",")[1];
 
@@ -120,15 +103,15 @@ export default function Invoice() {
                         <div className="grid grid-cols-1 gap-4 mb-6">
                             <div className="border-b-2 border-gray-300 pb-4">
                                 <p>
-                                    <strong>Name:</strong> {invoiceData.name}
+                                    <strong>Name:</strong> {invoiceData.dataTicket[0].fullName || "N/A"}
                                 </p>
                                 <p>
                                     <strong>Order Number:</strong>{" "}
-                                    {invoiceData.orderNumber}
+                                    {invoiceData.orderNumber || "N/A"}
                                 </p>
                                 <p>
                                     <strong>Order Date:</strong>{" "}
-                                    {invoiceData.orderDate}
+                                    {invoiceData.orderDate || "N/A"}
                                 </p>
                             </div>
                         </div>
@@ -143,17 +126,25 @@ export default function Invoice() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {invoiceData.tickets.map(
-                                            (ticket, index) => (
-                                                <tr
-                                                    className="bg-gray-600"
-                                                    key={index}
-                                                >
-                                                    <td className="px-4 py-2 border border-gray-400">
-                                                        {ticket.type}
-                                                    </td>
-                                                </tr>
+                                        {invoiceData.dataTicket ? (
+                                            invoiceData.dataTicket.map(
+                                                (ticket, index) => (
+                                                    <tr
+                                                        className="bg-gray-600"
+                                                        key={index}
+                                                    >
+                                                        <td className="px-4 py-2 border border-gray-400">
+                                                            {ticket.type}
+                                                        </td>
+                                                    </tr>
+                                                )
                                             )
+                                        ) : (
+                                            <tr>
+                                                <td className="px-4 py-2 border border-gray-400">
+                                                    No tickets available
+                                                </td>
+                                            </tr>
                                         )}
                                     </tbody>
                                 </table>
