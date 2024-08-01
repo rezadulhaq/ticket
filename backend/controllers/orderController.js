@@ -17,6 +17,25 @@ const {
 const QRCode = require("qrcode");
 
 class Controller {
+
+    static async checkPaymentStatus(req, res, next) {
+        const { invoiceId } = req.query; // Ambil ID invoice dari query parameter
+
+        try {
+            // Gantilah ini dengan logika sesuai dengan sistem pembayaran yang Anda gunakan
+            const paymentStatus = await invoice.checkStatus(invoiceId); // Cek status pembayaran
+
+            if (paymentStatus) {
+                res.json({ status: paymentStatus }); // Kirim status pembayaran ke client
+            } else {
+                res.status(404).json({ error: "Invoice tidak ditemukan" });
+            }
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: "Gagal memeriksa status pembayaran" });
+        }
+    }
+
     static async generateQRCode(req, res, next) {
         const qrString = "some-random-qr-string";
 
@@ -52,6 +71,7 @@ class Controller {
             const createdInvoice = await invoice.createInvoice(invoiceData);
 
             res.json({ invoiceUrl: createdInvoice.invoice_url });
+            console.log(invoiceUrl, "????????????????");
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: "Failed to create payment" });

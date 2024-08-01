@@ -96,14 +96,14 @@ const TicketPage = () => {
             })),
         };
 
-        console.log({payload})
+        // console.log({payload})
         
         try {
             const response = await axios.post(
                 "http://localhost:3000/create-qr-code/",
                 payload
             );
-            console.log("Order created successfully:", response.data);
+            // console.log("Order created successfully:", response.data);
             navigate("/payment", { state: { data:response.data } });
         } catch (error) {
             console.error("Error creating order:", error);

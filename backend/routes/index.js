@@ -19,7 +19,7 @@ router.get("/category", TicketController.getAllCategoryTicket);
 router.post("/order", OrderController.createOrder);
 router.post("/api/create-payment", OrderController.paymentGateWay);
 router.get("/api/generateQR", OrderController.generateQRCode);
-
-router.post("/create-qr-code", TicketController.createQRCode)
+router.get("/api/check-payment-status", OrderController.checkPaymentStatus);
+router.post("/create-qr-code", TicketController.createQRCode);
 
 module.exports = router;
