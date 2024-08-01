@@ -361,6 +361,7 @@ const TicketPage = () => {
                                 id="referral-code"
                                 type="text"
                                 className="text-black placeholder:font-semibold rounded-[20px] p-2 w-full sm:w-auto"
+                                autoComplete="off"
                                 value={referralCode}
                                 onChange={(e) =>
                                     setReferralCode(e.target.value)
