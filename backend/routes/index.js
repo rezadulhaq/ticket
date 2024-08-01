@@ -15,6 +15,7 @@ router.delete("/user/:id", UserController.deleteUsersById);
 
 router.get("/ticket", TicketController.getAllTicket);
 router.get("/ticket/:id", TicketController.getTicketById);
+router.get("/ticket-promo/:name", OrderController.checkPromoCode);
 router.get("/category", TicketController.getAllCategoryTicket);
 router.post("/order", OrderController.createOrder);
 router.post("/api/create-payment", OrderController.paymentGateWay);

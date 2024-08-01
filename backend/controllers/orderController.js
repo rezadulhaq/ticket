@@ -13,6 +13,7 @@ const {
     Order,
     OrderDetail,
     Invoice,
+    PromoCode,
 } = require("../models/index");
 
 const QRCode = require("qrcode");
@@ -20,12 +21,12 @@ const QRCode = require("qrcode");
 class Controller {
     static async checkPaymentStatus(req, res, next) {
         const { invoiceId } = req.query; // Get the invoice ID from the query parameter
-    
+
         try {
             const invoice = await Invoice.findOne({
                 where: { id: invoiceId },
             });
-    
+
             if (invoice) {
                 // Assuming `status` is a field in the Invoice model indicating payment status
                 res.json({ status: invoice.status });
@@ -39,7 +40,30 @@ class Controller {
             });
         }
     }
-    
+
+    static async checkPromoCode(req, res, next) {
+        try {
+            const name = req.params.name;
+            let data = await PromoCode.findOne({ where: { name } });
+            let result;
+            if (data) {
+                res.status(200).json({
+                    message: "Promo Berhasil",
+                    status: true,
+                });
+            } else {
+                res.status(200).json({
+                    message: "Promo Berhasil",
+                    status: false,
+                });
+            }
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({
+                error: "Failed to check payment status",
+            });
+        }
+    }
 
     static async generateQRCode(req, res, next) {
         const qrString = "some-random-qr-string";

@@ -30,6 +30,8 @@ const TicketPage = () => {
     const [totalTicket, setTotalTicket] = useState(0);
     const [ticket, setTicket] = useState([]);
     const [allTicket, setAllTicket] = useState([]);
+    const [referralCode, setReferralCode] = useState("");
+    const [discount, setDiscount] = useState(0);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -80,6 +82,26 @@ const TicketPage = () => {
         return getSubTotal() - selectedTickets.length * 2500;
     };
 
+    const handleReferralCode = async () => {
+        try {
+            const response = await axios.get(
+                "http://localhost:3000/ticket-promo/" + referralCode
+            );
+            const { isValid, discountAmount } = {
+                isValid: response.data.status,
+                discountAmount: selectedTickets.length * 2500,
+            };
+
+            if (isValid) {
+                setDiscount(discountAmount);
+            } else {
+                setDiscount(0); // No discount if invalid
+            }
+        } catch (error) {
+            console.error("Error checking referral code:", error);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -97,14 +119,14 @@ const TicketPage = () => {
         };
 
         // console.log({payload})
-        
+
         try {
             const response = await axios.post(
                 "http://localhost:3000/create-qr-code/",
                 payload
             );
             // console.log("Order created successfully:", response.data);
-            navigate("/payment", { state: { data:response.data } });
+            navigate("/payment", { state: { data: response.data } });
         } catch (error) {
             console.error("Error creating order:", error);
         }
@@ -339,9 +361,16 @@ const TicketPage = () => {
                                 id="referral-code"
                                 type="text"
                                 className="text-black placeholder:font-semibold rounded-[20px] p-2 w-full sm:w-auto"
+                                value={referralCode}
+                                onChange={(e) =>
+                                    setReferralCode(e.target.value)
+                                }
                             />
                         </div>
-                        <button className="bg-gradient-custom px-8 text-lg py-1.5 rounded-full font-bold shadow-lg mt-4 sm:mt-8">
+                        <button
+                            className="bg-gradient-custom px-8 text-lg py-1.5 rounded-full font-bold shadow-lg mt-4 sm:mt-8"
+                            onClick={handleReferralCode}
+                        >
                             Apply
                         </button>
                     </div>
@@ -362,7 +391,7 @@ const TicketPage = () => {
                                 </h3>
                                 <button className="bg-gradient-custom px-14 text-lg py-3 rounded-full font-bold shadow-lg">
                                     {/* referal code akan sama mendapatkan discount 2.500, jd gajadi hanya 100 orang pertama  */}
-                                    {rupiah(selectedTickets.length * 2500)}
+                                    {rupiah(discount)}
                                 </button>
                             </div>
                             <div className="flex flex-col items-center">
