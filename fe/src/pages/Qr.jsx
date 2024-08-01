@@ -1,40 +1,40 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import QRCode from 'react-qr-code';
+import axios from 'axios';
 
 export default function Qr() {
   const location = useLocation();
   const navigate = useNavigate();
   const qrData = location.state?.data || {};
+  const [paymentStatus, setPaymentStatus] = useState('pending'); // Set initial status to 'pending'
+  const [intervalId, setIntervalId] = useState(null);
 
   const handlePaymentSuccess = () => {
     navigate('/invoice', { state: { invoiceData: qrData.invoiceData } });
   };
 
-  // Simulasi polling atau metode lain untuk memeriksa status pembayaran
-  React.useEffect(() => {
-    const checkPaymentStatus = async () => {
-      try {
-        console.log("tes tes tes");
-        const response = await fetch('http://localhost:3000/api/check-payment-status', {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        });
-        const data = await response.json();
-
-        if (data.status === 'paid') {
-          handlePaymentSuccess();
-        } else {
-          // Jika status belum berhasil, lakukan polling ulang dalam interval tertentu
-          setTimeout(checkPaymentStatus, 5000); // Cek setiap 5 detik
-        }
-      } catch (error) {
-        console.error('Error checking payment status:', error);
+  const checkPaymentStatus = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3000/check-payment-status?${qrData.transactionId}`);
+      if (response.data.status === 'success') {
+        setPaymentStatus('success');
+        handlePaymentSuccess();
+        clearInterval(intervalId); // Stop polling
       }
-    };
+    } catch (error) {
+      console.error('Error checking payment status:', error);
+    }
+  };
 
-    checkPaymentStatus();
-  }, [navigate]);
+  useEffect(() => {
+    // Start polling every 5 seconds
+    const id = setInterval(checkPaymentStatus, 5000);
+    setIntervalId(id);
+
+    // Clean up interval on component unmount
+    return () => clearInterval(id);
+  }, [qrData.transactionId]);
 
   return (
     <div className="background-payment h-screen">

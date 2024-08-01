@@ -58,6 +58,18 @@ module.exports = (sequelize, DataTypes) => {
                     },
                 },
             },
+            totalTicket: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                validate: {
+                    notNull: {
+                        msg: "totalTicket is Required",
+                    },
+                    notEmpty: {
+                        msg: "totalTicket is Required",
+                    },
+                },
+            },
             isDeleted: DataTypes.BOOLEAN,
             color: DataTypes.STRING,
         },

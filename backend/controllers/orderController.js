@@ -12,29 +12,34 @@ const {
     sequelize,
     Order,
     OrderDetail,
+    Invoice,
 } = require("../models/index");
 
 const QRCode = require("qrcode");
 
 class Controller {
-
     static async checkPaymentStatus(req, res, next) {
-        const { invoiceId } = req.query; // Ambil ID invoice dari query parameter
-
+        const { invoiceId } = req.query; // Get the invoice ID from the query parameter
+    
         try {
-            // Gantilah ini dengan logika sesuai dengan sistem pembayaran yang Anda gunakan
-            const paymentStatus = await invoice.checkStatus(invoiceId); // Cek status pembayaran
-
-            if (paymentStatus) {
-                res.json({ status: paymentStatus }); // Kirim status pembayaran ke client
+            const invoice = await Invoice.findOne({
+                where: { id: invoiceId },
+            });
+    
+            if (invoice) {
+                // Assuming `status` is a field in the Invoice model indicating payment status
+                res.json({ status: invoice.status });
             } else {
-                res.status(404).json({ error: "Invoice tidak ditemukan" });
+                res.status(404).json({ error: "Invoice not found" });
             }
         } catch (error) {
             console.error(error);
-            res.status(500).json({ error: "Gagal memeriksa status pembayaran" });
+            res.status(500).json({
+                error: "Failed to check payment status",
+            });
         }
     }
+    
 
     static async generateQRCode(req, res, next) {
         const qrString = "some-random-qr-string";
