@@ -3,6 +3,8 @@ import { jsPDF } from "jspdf";
 import QRCode from "qrcode";
 
 export default function Invoice() {
+    const qrData = location.state?.data || {};
+    console.log(qrData, "<<<<<<<<<<<<<<<<<");
     const invoiceData = {
         name: "John Doe",
         orderNumber: "INV123456",

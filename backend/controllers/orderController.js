@@ -16,28 +16,47 @@ const {
     PromoCode,
 } = require("../models/index");
 
+const axios = require("axios");
+
 const QRCode = require("qrcode");
 
 class Controller {
     static async checkPaymentStatus(req, res, next) {
-        const { invoiceId } = req.query; // Get the invoice ID from the query parameter
-
+        const { qrCodeId } = req.query; // Ambil qrCodeId dari parameter query
+        console.log(req.query, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         try {
-            const invoice = await Invoice.findOne({
-                where: { id: invoiceId },
-            });
+            // const response = await axios.get(
+            //     `https://api.xendit.co/qr_codes/${qrCodeId}`,
+            //     {
+            //         headers: {
+            //             "api-version": "2022-07-31",
+            //             Authorization: `Basic ${Buffer.from(
+            //                 `${process.env.XENDIT_SECRET_KEY}:`
+            //             ).toString("base64")}`,
+            //         },
+            //     }
+            // );
 
-            if (invoice) {
-                // Assuming `status` is a field in the Invoice model indicating payment status
-                res.json({ status: invoice.status });
-            } else {
-                res.status(404).json({ error: "Invoice not found" });
-            }
+            const response = await axios.get(
+                `https://api.xendit.co/qr_codes/${qrCodeId}`,
+                {
+                    headers: {
+                        "api-version": "2022-07-31",
+                        Authorization: `Basic ${Buffer.from(
+                            `${process.env.XENDIT_SECRET_KEY}:`
+                        ).toString("base64")}`,
+                    },
+                }
+            );
+
+            console.log(response, "<<<<<<<<<<<<<");
+
+            const status = response.data.status; // Ambil status dari respons Xendit
+
+            res.status(200).json({ status });
         } catch (error) {
-            console.error(error);
-            res.status(500).json({
-                error: "Failed to check payment status",
-            });
+            console.error("Error checking payment status:", error);
+            res.status(500).json({ error: error.message });
         }
     }
 

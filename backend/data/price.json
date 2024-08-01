@@ -1,6 +1,6 @@
 [
     {
-        "price":70000,
+        "price":5000,
         "TicketId":1, 
         "CategoryId":1, 
         "color":"bg-[#8EDB8C]",

@@ -113,7 +113,7 @@ class Controller {
     static async createQRCode(req, res) {
         try {
             const { userId, totalPrice, orderDetails } = req.body;
-            console.log({ orderDetails });
+            // console.log({ orderDetails });
             let random = Math.floor(Math.random() * 1000);
             const data = {
                 reference_id: uuidv4(),
@@ -121,7 +121,8 @@ class Controller {
                 currency: "IDR",
                 amount: totalPrice,
             };
-            const response = await axios(getConfig("POST", data));
+            let response = await axios(getConfig("POST", data));
+            response.data.dataTicket = orderDetails;
             res.status(200).json(response.data);
         } catch (error) {
             console.log(error);

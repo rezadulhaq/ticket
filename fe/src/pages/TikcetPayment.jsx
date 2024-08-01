@@ -79,7 +79,7 @@ const TicketPage = () => {
     };
 
     const getTotal = () => {
-        return getSubTotal() - selectedTickets.length * 2500;
+        return getSubTotal() - discount;
     };
 
     const handleReferralCode = async () => {
@@ -416,7 +416,7 @@ const TicketPage = () => {
                     </div>
                     <div className="flex justify-between mb-2">
                         <span>Discount:</span>
-                        <span>-{rupiah(selectedTickets.length * 2500)}</span>
+                        <span>-{rupiah(discount)}</span>
                     </div>
                     <div className="flex justify-between font-bold">
                         <span>Total:</span>
