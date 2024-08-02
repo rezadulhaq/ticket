@@ -7,6 +7,7 @@ export default function Qr() {
     const location = useLocation();
     const navigate = useNavigate();
     const qrData = location.state?.data || {};
+    const dataTicket = location.state?.ticket || {};
     const [paymentStatus, setPaymentStatus] = useState("pending"); // Set initial status to 'pending'
     const [intervalId, setIntervalId] = useState(null);
     // const [data, setData] = useState([]);
@@ -14,11 +15,11 @@ export default function Qr() {
     const handlePaymentSuccess = () => {
         navigate("/invoice", {
             state: {
-                invoiceData: qrData
+                invoiceData: qrData,
+                dataTicket: dataTicket
             },
         });
     };
-console.log(qrData);
     useEffect(() => {
         const checkPaymentStatus = async () => {
             try {
