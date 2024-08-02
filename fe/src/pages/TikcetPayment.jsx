@@ -43,7 +43,7 @@ const TicketPage = () => {
             dataTicket.push(data);
             countTicket += el.quantity * el.data.Ticket.quantity;
         });
-
+        setTicket(dataTicket);
         setTotalTicket(countTicket);
         setAllTicket(formTicket(dataTicket));
     }, [selectedTickets, location]);
@@ -51,6 +51,7 @@ const TicketPage = () => {
     function formTicket(allTicket) {
         let arr = [];
         allTicket.forEach((el) => {
+            console.log(el, "mmmmmmm");
             let countTicket = el.Ticket.quantity * el.quantity;
             for (let index = 0; index < countTicket; index++) {
                 let obj = {
@@ -108,7 +109,7 @@ const TicketPage = () => {
         const payload = {
             userId: localStorage.getItem("UserId"),
             totalPrice: getTotal(),
-            ticketdata : filteredTickets,
+            ticketdata: filteredTickets,
             orderDetails: formDataRefs.current.map((item, index) => ({
                 TicketPriceId: item.TicketPriceId,
                 lineId: item.idLine,
@@ -119,7 +120,21 @@ const TicketPage = () => {
             })),
         };
 
-        // console.log({payload})
+        let arrFullTicket = []
+
+        for (let index = 0; index < payload.orderDetails.length; index++) {
+            const orderUser = payload.orderDetails[index];
+            for (let j = 0; j < payload.ticketdata.length; j++) {
+                const checkTicket = payload.ticketdata[j];
+                if (orderUser.TicketPriceId == checkTicket.id) {
+                    arrFullTicket.push({
+                        fullName: orderUser.fullName,
+                        highSchool: orderUser.highSchool,
+                        ticketName: checkTicket.ticket.name
+                    })
+                }
+            }
+        }
 
         try {
             const response = await axios.post(
@@ -127,7 +142,9 @@ const TicketPage = () => {
                 payload
             );
             // console.log("Order created successfully:", response.data);
-            navigate("/payment", { state: { data: response.data } });
+            navigate("/payment", {
+                state: { data: response.data, ticket: arrFullTicket },
+            });
         } catch (error) {
             console.error("Error creating order:", error);
         }

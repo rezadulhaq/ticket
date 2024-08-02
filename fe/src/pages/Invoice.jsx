@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { jsPDF } from "jspdf";
 import QRCode from "qrcode";
 import { useLocation } from "react-router-dom";
@@ -6,17 +6,9 @@ import { useLocation } from "react-router-dom";
 export default function Invoice() {
     const location = useLocation();
     const { invoiceData = {} } = location.state || {};
-
-    useEffect(() => {
-        console.log(invoiceData, "<<<<<<<<<<<<<<<<<");
-    }, [invoiceData]);
+    const { dataTicket = [] } = location.state || {}; // Data tiket yang tersedia
 
     const generatePDF = async () => {
-        if (!invoiceData.tickets) {
-            console.error("No tickets data available to generate PDF.");
-            return;
-        }
-
         const doc = new jsPDF("p", "pt", "a4");
         const margin = 30;
         const ticketWidth = 500;
@@ -25,7 +17,7 @@ export default function Invoice() {
         const pageHeight = doc.internal.pageSize.height;
         let yOffset = margin;
 
-        for (const [index, ticket] of invoiceData.tickets.entries()) {
+        for (const [index, ticket] of dataTicket.entries()) {
             if (yOffset + ticketHeight + margin > pageHeight) {
                 doc.addPage();
                 yOffset = margin;
@@ -44,7 +36,7 @@ export default function Invoice() {
             // Add ticket title and slogan
             doc.setFontSize(16);
             doc.setFont("Arial", "bold");
-            doc.text("FEB UI Event", margin + 20, yOffset + 30);
+            doc.text("Faculty Exhibition at FEB UI", margin + 20, yOffset + 30);
             doc.setFontSize(12);
             doc.setFont("Arial", "italic");
             doc.text("Your Gateway to Innovation!", margin + 20, yOffset + 50);
@@ -54,23 +46,14 @@ export default function Invoice() {
             doc.setFont("Arial", "normal");
 
             // Biodata section
-            doc.text(`Name: ${invoiceData.name || "N/A"}`, margin + 20, yOffset + 80);
-            doc.text(
-                `Order Number: ${invoiceData.orderNumber || "N/A"}`,
-                margin + 20,
-                yOffset + 100
-            );
-            doc.text(
-                `Order Date: ${invoiceData.orderDate || "N/A"}`,
-                margin + 20,
-                yOffset + 120
-            );
-            doc.text(`Ticket Type: ${ticket.type || "N/A"}`, margin + 20, yOffset + 140);
-
+            doc.text(`Name: ${ticket.fullName}`, margin + 20, yOffset + 80);
+            doc.text(`High School: ${ticket.highSchool}`, margin + 20, yOffset + 100);
+            doc.text(`Ticket Type: ${ticket.ticketName}`, margin + 20, yOffset + 120);
+            
             // Add QR code
             try {
                 const qrCodeDataUrl = await QRCode.toDataURL(
-                    `${invoiceData.orderNumber || "N/A"}-${ticket.type || "N/A"}`
+                    `Ticket-${ticket.TicketPriceId}`
                 );
                 const base64ImageData = qrCodeDataUrl.split(",")[1];
 
@@ -102,17 +85,7 @@ export default function Invoice() {
                     <div className="p-6">
                         <div className="grid grid-cols-1 gap-4 mb-6">
                             <div className="border-b-2 border-gray-300 pb-4">
-                                <p>
-                                    <strong>Name:</strong> {invoiceData.dataTicket[0].fullName || "N/A"}
-                                </p>
-                                <p>
-                                    <strong>Order Number:</strong>{" "}
-                                    {invoiceData.orderNumber || "N/A"}
-                                </p>
-                                <p>
-                                    <strong>Order Date:</strong>{" "}
-                                    {invoiceData.orderDate || "N/A"}
-                                </p>
+                                Detail Ticket
                             </div>
                         </div>
                         <div className="bg-gray-800 p-4 rounded-lg text-white">
@@ -121,31 +94,27 @@ export default function Invoice() {
                                     <thead className="bg-gray-700">
                                         <tr>
                                             <th className="px-4 py-2 border border-gray-400">
+                                                Full Name
+                                            </th>
+                                            <th className="px-4 py-2 border border-gray-400">
                                                 Ticket Type
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {invoiceData.dataTicket ? (
-                                            invoiceData.dataTicket.map(
-                                                (ticket, index) => (
-                                                    <tr
-                                                        className="bg-gray-600"
-                                                        key={index}
-                                                    >
-                                                        <td className="px-4 py-2 border border-gray-400">
-                                                            {ticket.type}
-                                                        </td>
-                                                    </tr>
-                                                )
-                                            )
-                                        ) : (
-                                            <tr>
+                                        {dataTicket.map((ticket, index) => (
+                                            <tr
+                                                className="bg-gray-600"
+                                                key={index}
+                                            >
                                                 <td className="px-4 py-2 border border-gray-400">
-                                                    No tickets available
+                                                    {ticket.fullName || "N/A"}
+                                                </td>
+                                                <td className="px-4 py-2 border border-gray-400">
+                                                    {ticket.ticketName || "N/A"}
                                                 </td>
                                             </tr>
-                                        )}
+                                        ))}
                                     </tbody>
                                 </table>
                             </div>
