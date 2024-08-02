@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import Navbar from "../components/Navbar";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Bounce } from 'react-toastify';
 
 const Register = () => {
     const navigate = useNavigate(); // Initialize navigate hook
@@ -12,15 +15,26 @@ const Register = () => {
         fullName: "",
         phoneNumber: "",
         highSchool: "",
+        confirmedPassword: '',
     });
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
-    };
+    const [error, setError] = useState('');
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+
+    if (name === 'password' || name === 'confirmedPassword') {
+      if (formData.password !== formData.confirmedPassword) {
+        setError('Passwords do not match');
+      } else {
+        setError('');
+      }
+    }
+  };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -35,13 +49,32 @@ const Register = () => {
             if (!response.ok) {
                 throw new Error("Network response was not ok");
             }
-            alert("Registration successful!");
+            // alert("Registration successful!");
             navigate("/login"); 
+            toast.success('Register Success', {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                transition: Bounce,
+                });
         } catch (error) {
             console.error("Error:", error);
         }
     };
-
+    useEffect(() => {
+        // Validate passwords whenever they change
+        if (formData.password && formData.confirmedPassword) {
+          if (formData.password !== formData.confirmedPassword) {
+            setError('Passwords do not match');
+          } else {
+            setError('');
+          }
+        }
+      }, [formData.password, formData.confirmedPassword]);
     return (
         <div
             className="min-h-screen bg-cover bg-center flex items-center justify-center"
@@ -144,37 +177,34 @@ const Register = () => {
                         />
                     </div>
                     <div className="mb-2">
-                        <label
-                            htmlFor="password"
-                            className="block text-gray-700"
-                        >
-                            Password
-                        </label>
-                        <input
-                            id="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            className="w-full p-2 rounded-[15px] focus:outline-none border border-gray-300"
-                            type="password"
-                            required
-                        />
-                    </div>
-                    <div className="mb-2">
-                        <label
-                            htmlFor="confirmedPassword"
-                            className="block text-gray-700"
-                        >
-                            Confirmed Password
-                        </label>
-                        <input
-                            id="confirmedPassword"
-                            name="confirmedPassword"
-                            className="w-full p-2 rounded-[15px] focus:outline-none border border-gray-300"
-                            type="password"
-                            required
-                        />
-                    </div>
+        <label htmlFor="password" className="block text-gray-700">
+          Password
+        </label>
+        <input
+          id="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          className="w-full p-2 rounded-[15px] focus:outline-none border border-gray-300"
+          type="password"
+          required
+        />
+      </div>
+      <div className="mb-2">
+        <label htmlFor="confirmedPassword" className="block text-gray-700">
+          Confirmed Password
+        </label>
+        {error && <p className="text-red-600 mb-1">{error}</p>} {/* Error message */}
+        <input
+          id="confirmedPassword"
+          name="confirmedPassword"
+          value={formData.confirmedPassword}
+          onChange={handleChange}
+          className="w-full p-2 rounded-[15px] focus:outline-none border border-gray-300"
+          type="password"
+          required
+        />
+      </div>
                     <button
                         type="submit"
                         className="w-full bg-blue-600 text-white py-2 rounded"

@@ -76,7 +76,7 @@ export default function Invoice() {
     };
 
     return (
-        <div className="invoice-container p-8 w-full h-auto bg-gray-100">
+        <div className="backround-invoice p-8 w-full h-auto bg-gray-100">
             <h1 className="text-3xl font-bold text-center mb-8 text-blue-800">
                 Invoice
             </h1>

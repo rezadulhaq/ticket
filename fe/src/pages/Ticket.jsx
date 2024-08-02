@@ -57,7 +57,7 @@ const Tickets = () => {
             });
         });
 
-        console.log(result, "ini result");
+        // console.log(result, "ini result");
         return result;
     };
 

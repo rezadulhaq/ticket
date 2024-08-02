@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { MdPerson, MdLock } from "react-icons/md";
 import Navbar from "../components/Navbar";
-
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Bounce } from 'react-toastify';
 const LoginPage = () => {
     const navigate = useNavigate(); // Initialize navigate hook
     const [formData, setFormData] = useState({
@@ -19,7 +21,7 @@ const LoginPage = () => {
     };
 
     const handleSubmit = async (e) => {
-        console.log("masuk");
+        // console.log("masuk");
         e.preventDefault();
         try {
             const response = await fetch("http://localhost:3000/user/login", {
@@ -29,17 +31,27 @@ const LoginPage = () => {
                 },
                 body: JSON.stringify(formData),
             });
-            console.log(response);
+            // console.log(response);
             if (!response.ok) {
                 throw new Error("Network response was not ok");
             }
-            alert("Login successful!");
+            // alert("Login successful!");
             const responseJSON = await response.json();
-            console.log(responseJSON);
+            // console.log(responseJSON);
             localStorage.setItem("access_token", responseJSON.accesstoken);
             localStorage.setItem("UserId", responseJSON.UserId);
 
             navigate("/"); // Navigate to landing page on successful login
+            toast.success('Login Success', {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                transition: Bounce,
+                });
             return { data: responseJSON };
         } catch (error) {
             console.error("Error:", error);
@@ -70,7 +82,7 @@ const LoginPage = () => {
                             name="email"
                             value={formData.email}
                             onChange={handleChange}
-                            placeholder="Email/No. Handphone"
+                            placeholder="Email"
                             className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
                             required
                         />
