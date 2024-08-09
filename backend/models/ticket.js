@@ -26,6 +26,11 @@ module.exports = (sequelize, DataTypes) => {
             isDeleted: DataTypes.BOOLEAN,
         },
         {
+            hooks: {
+                beforeCreate(instance, option) {
+                    instance.isDeleted = false;
+                },
+            },
             sequelize,
             modelName: "Ticket",
         }

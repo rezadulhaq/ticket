@@ -1,4 +1,17 @@
-const { Admin, sequelize } = require("../models/index");
+const {
+    Admin,
+    sequelize,
+    Category,
+    Profile,
+    Ticket,
+    TicketPrice,
+    User,
+    UserTicket,
+    Order,
+    OrderDetail,
+    Invoice,
+    PromoCode,
+} = require("../models/index");
 const { hashPassword, compareHash } = require("../helpers/bycript");
 const { createToken } = require("../helpers/jwt");
 
@@ -187,8 +200,8 @@ class AdminController {
                 include: [
                     {
                         model: TicketPrice,
-                        as: "ticketPrices", // pastikan nama alias sesuai dengan asosiasi
-                        attributes: ["id", "price", "description"], // sesuaikan dengan atribut yang ada di model TicketPrice
+                        // as: "ticketPrices", // pastikan nama alias sesuai dengan asosiasi
+                        // attributes: ["id", "price", "description"], // sesuaikan dengan atribut yang ada di model TicketPrice
                     },
                 ],
             });
@@ -211,8 +224,8 @@ class AdminController {
                 include: [
                     {
                         model: TicketPrice,
-                        as: "ticketPrices",
-                        attributes: ["id", "price", "description"],
+                        // as: "ticketPrices",
+                        // attributes: ["id", "price", "description"],
                     },
                 ],
             });
@@ -438,7 +451,7 @@ class AdminController {
                 include: [
                     {
                         model: TicketPrice,
-                        as: "ticketPrices",
+                        // as: "ticketPrices",
                         attributes: ["id", "price", "totalTicket", "color"],
                     },
                 ],
@@ -462,7 +475,7 @@ class AdminController {
                 include: [
                     {
                         model: TicketPrice,
-                        as: "ticketPrices",
+                        // as: "ticketPrices",
                         attributes: ["id", "price", "totalTicket", "color"],
                     },
                 ],

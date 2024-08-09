@@ -5,9 +5,9 @@ const AdminController = require('../controllers/adminController');
 // Admin Routes
 
 // Admin Authentication Routes
-router.post('/admin/register', AdminController.registerAdmin); // Register Admin
-router.post('/admin/login', AdminController.loginAdmin); // Login Admin
-router.put('/admin/change-password', AdminController.changePassword); // Change Admin Password
+router.post('/register', AdminController.registerAdmin); // Register Admin
+router.post('/login', AdminController.loginAdmin); // Login Admin
+router.put('/change-password', AdminController.changePassword); // Change Admin Password
 
 // Category Routes
 router.post('/categories', AdminController.createCategory); // Create Category
