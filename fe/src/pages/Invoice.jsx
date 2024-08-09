@@ -53,7 +53,7 @@ export default function Invoice() {
             // Add QR code
             try {
                 const qrCodeDataUrl = await QRCode.toDataURL(
-                    `Ticket-${ticket.TicketPriceId}`
+                    `Ticket-${ticket.fullName-ticket.ticketName}`
                 );
                 const base64ImageData = qrCodeDataUrl.split(",")[1];
 
