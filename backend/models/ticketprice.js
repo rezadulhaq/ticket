@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
             });
             TicketPrice.hasMany(models.OrderDetail, {
                 foreignKey: 'TicketPriceId',
-                as: 'orderDetails',
+                // as: 'orderDetails',
             });
         }
     }
@@ -78,6 +78,11 @@ module.exports = (sequelize, DataTypes) => {
             color: DataTypes.STRING,
         },
         {
+            hooks: {
+                beforeCreate(instance, option) {
+                    instance.isDeleted = false;
+                },
+            },
             sequelize,
             modelName: "TicketPrice",
         }

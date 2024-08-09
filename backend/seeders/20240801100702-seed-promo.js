@@ -15,6 +15,7 @@ module.exports = {
         const data = require("../data/promo.json").map(function (el) {
             el.createdAt = new Date();
             el.updatedAt = new Date();
+            el.isDeleted = false;
             return el;
         });
         await queryInterface.bulkInsert("PromoCodes", data, {});

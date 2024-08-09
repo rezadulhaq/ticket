@@ -12,11 +12,11 @@ module.exports = (sequelize, DataTypes) => {
             // Define associations here
             OrderDetail.belongsTo(models.Order, {
                 foreignKey: 'OrderId',
-                as: 'order',
+                // as: 'order',
             });
             OrderDetail.belongsTo(models.TicketPrice, {
                 foreignKey: 'TicketPriceId',
-                as: 'ticketPrice',
+                // as: 'ticketPrice',
             });
         }
     }

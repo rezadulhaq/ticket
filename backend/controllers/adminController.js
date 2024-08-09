@@ -1,4 +1,17 @@
-const { Admin, sequelize } = require("../models/index");
+const {
+    Admin,
+    sequelize,
+    Category,
+    Profile,
+    Ticket,
+    TicketPrice,
+    User,
+    UserTicket,
+    Order,
+    OrderDetail,
+    Invoice,
+    PromoCode,
+} = require("../models/index");
 const { hashPassword, compareHash } = require("../helpers/bycript");
 const { createToken } = require("../helpers/jwt");
 const {
@@ -199,8 +212,8 @@ class AdminController {
                 include: [
                     {
                         model: TicketPrice,
-                        as: "ticketPrices", // pastikan nama alias sesuai dengan asosiasi
-                        attributes: ["id", "price", "description"], // sesuaikan dengan atribut yang ada di model TicketPrice
+                        // as: "ticketPrices", // pastikan nama alias sesuai dengan asosiasi
+                        // attributes: ["id", "price", "description"], // sesuaikan dengan atribut yang ada di model TicketPrice
                     },
                 ],
             });
@@ -223,8 +236,8 @@ class AdminController {
                 include: [
                     {
                         model: TicketPrice,
-                        as: "ticketPrices",
-                        attributes: ["id", "price", "description"],
+                        // as: "ticketPrices",
+                        // attributes: ["id", "price", "description"],
                     },
                 ],
             });
@@ -450,7 +463,7 @@ class AdminController {
                 include: [
                     {
                         model: TicketPrice,
-                        as: "ticketPrices",
+                        // as: "ticketPrices",
                         attributes: ["id", "price", "totalTicket", "color"],
                     },
                 ],
@@ -474,7 +487,7 @@ class AdminController {
                 include: [
                     {
                         model: TicketPrice,
-                        as: "ticketPrices",
+                        // as: "ticketPrices",
                         attributes: ["id", "price", "totalTicket", "color"],
                     },
                 ],
@@ -490,6 +503,185 @@ class AdminController {
             res.status(500).json({ message: "Server error", error });
         }
     }
+
+    // Create a new promo code
+static async createPromoCode(req, res, next) {
+    try {
+        const { name } = req.body;
+
+        // Validate input
+        if (!name) {
+            return res.status(400).json({ message: "Name is required" });
+        }
+
+        // Create promo code
+        const newPromoCode = await PromoCode.create({ name });
+
+        res.status(201).json({
+            message: "Promo code created successfully",
+            promoCode: newPromoCode,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error", error });
+    }
+}
+
+// Get all promo codes
+static async getAllPromoCodes(req, res, next) {
+    try {
+        const promoCodes = await PromoCode.findAll();
+
+        res.status(200).json(promoCodes);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error", error });
+    }
+}
+
+// Get promo code by ID
+static async getPromoCodeById(req, res, next) {
+    try {
+        const { id } = req.params;
+
+        const promoCode = await PromoCode.findByPk(id);
+
+        if (!promoCode) {
+            return res.status(404).json({ message: "Promo code not found" });
+        }
+
+        res.status(200).json(promoCode);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error", error });
+    }
+}
+
+// Update promo code by ID
+static async updatePromoCode(req, res, next) {
+    try {
+        const { id } = req.params;
+        const { name } = req.body;
+
+        if (!name) {
+            return res.status(400).json({ message: "Name is required" });
+        }
+
+        // Update promo code
+        const [updated] = await PromoCode.update(
+            { name },
+            { where: { id }, returning: true }
+        );
+
+        if (!updated) {
+            return res.status(404).json({ message: "Promo code not found" });
+        }
+
+        const updatedPromoCode = await PromoCode.findByPk(id);
+        res.status(200).json({
+            message: "Promo code updated successfully",
+            promoCode: updatedPromoCode,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error", error });
+    }
+}
+
+// Delete promo code by ID
+static async deletePromoCode(req, res, next) {
+    try {
+        const { id } = req.params;
+
+        // Soft delete promo code
+        const [deleted] = await PromoCode.update(
+            { isDeleted: true },
+            { where: { id } }
+        );
+
+        if (!deleted) {
+            return res.status(404).json({ message: "Promo code not found" });
+        }
+
+        res.status(200).json({ message: "Promo code deleted successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error", error });
+    }
+}
+
+
+static async validatePromoCode(req, res, next) {
+    try {
+        const { code } = req.body; // The promo code is assumed to be a string
+
+        if (!code) {
+            return res.status(400).json({ message: "Promo code is required" });
+        }
+
+        // Find the promo code by name
+        const promoCode = await PromoCode.findOne({
+            where: {
+                name: code,
+                isDeleted: false // Ensure that isDeleted is handled in the model
+            }
+        });
+
+        console.log(promoCode, "<<<<<<<<<<<<<<<<");
+
+        if (promoCode) {
+            res.status(200).json({ valid: true });
+        } else {
+            res.status(200).json({ valid: false });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error", error });
+    }
+}
+
+static async getOrderDetailsByTicketNameAndFullName(req, res, next) {
+    try {
+        //outputscan =>> Ticket-ibrahim-ticketfebvip
+        const {outputscan} = req.body
+        let arrOutputScan = outputscan.split("-")
+        let fullName = arrOutputScan[1]
+        let ticketName = arrOutputScan[2]
+        // const { ticketName, fullName } = req.query; // Assuming parameters are passed via query string
+
+        if (!ticketName || !fullName) {
+            return res.status(400).json({ message: "Both ticket name and full name are required" });
+        }
+
+        // Fetch order details
+        const orderDetails = await OrderDetail.findAll({
+            include: [
+                {
+                    model: TicketPrice,
+                    as: 'ticketPrice',
+                    include: [
+                        {
+                            model: Ticket,
+                            as: 'ticket',
+                            attributes: ['name'], // Fetch only the ticket name
+                            where: { name: ticketName } // Filter by ticket name
+                        }
+                    ],
+                    attributes: [] // Don't fetch TicketPrice fields, only the associated Ticket fields
+                }
+            ],
+            where: {
+                fullName: fullName, // Filter by full name
+                isDeleted: false // Ensure you only fetch non-deleted records
+            }
+        });
+
+        res.status(200).json(orderDetails);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error", error });
+    }
+}
 }
 
 module.exports = AdminController;
