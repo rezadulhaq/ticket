@@ -1,7 +1,19 @@
 const { Admin, sequelize } = require("../models/index");
 const { hashPassword, compareHash } = require("../helpers/bycript");
 const { createToken } = require("../helpers/jwt");
-
+const {
+    Buyer,
+    Profile,
+    Ticket,
+    TicketPrice,
+    User,
+    UserTicket,
+    Order,
+    OrderDetail,
+    Category,
+    Invoice,
+    PromoCode,
+} = require("../models/index");
 class AdminController {
     // Register Admin
     static async registerAdmin(req, res, next) {
