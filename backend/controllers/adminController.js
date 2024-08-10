@@ -149,13 +149,11 @@ class AdminController {
                 include: [
                     {
                         model: Order,
-                        as: "order",
-                        attributes: ["id", "otherAttributes"], // Ganti 'otherAttributes' dengan atribut yang sesuai
+                        
                     },
                     {
                         model: TicketPrice,
-                        as: "ticketPrice",
-                        attributes: ["id", "price", "description"], // Ganti dengan atribut yang sesuai
+                        
                     },
                 ],
                 where: { isDeleted: false }, // Misalnya hanya mengambil yang tidak dihapus
