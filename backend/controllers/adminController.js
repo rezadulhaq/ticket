@@ -644,12 +644,12 @@ static async getOrderDetailsByTicketNameAndFullName(req, res, next) {
             include: [
                 {
                     model: TicketPrice,
-                    as: 'ticketPrice',
+                    // as: 'ticketPrice',
                     include: [
                         {
                             model: Ticket,
-                            as: 'ticket',
-                            attributes: ['name'], // Fetch only the ticket name
+                            // as: 'ticket',
+                            // attributes: ['name'], // Fetch only the ticket name
                             where: { name: ticketName } // Filter by ticket name
                         }
                     ],
