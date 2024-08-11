@@ -14,19 +14,7 @@ const {
 } = require("../models/index");
 const { hashPassword, compareHash } = require("../helpers/bycript");
 const { createToken } = require("../helpers/jwt");
-const {
-    Buyer,
-    Profile,
-    Ticket,
-    TicketPrice,
-    User,
-    UserTicket,
-    Order,
-    OrderDetail,
-    Category,
-    Invoice,
-    PromoCode,
-} = require("../models/index");
+
 class AdminController {
     // Register Admin
     static async registerAdmin(req, res, next) {
@@ -161,13 +149,13 @@ class AdminController {
                 include: [
                     {
                         model: Order,
-                        as: "order",
-                        attributes: ["id", "otherAttributes"], // Ganti 'otherAttributes' dengan atribut yang sesuai
+                        // as: "order",
+                        // attributes: ["id", "otherAttributes"], // Ganti 'otherAttributes' dengan atribut yang sesuai
                     },
                     {
                         model: TicketPrice,
-                        as: "ticketPrice",
-                        attributes: ["id", "price", "description"], // Ganti dengan atribut yang sesuai
+                        // as: "ticketPrice",
+                        // attributes: ["id", "price", "description"], // Ganti dengan atribut yang sesuai
                     },
                 ],
                 where: { isDeleted: false }, // Misalnya hanya mengambil yang tidak dihapus
@@ -488,7 +476,7 @@ class AdminController {
                     {
                         model: TicketPrice,
                         // as: "ticketPrices",
-                        attributes: ["id", "price", "totalTicket", "color"],
+                        attributes: ["id", "price", "totalTicket","CategoryId", "color"],
                     },
                 ],
             });
@@ -530,7 +518,9 @@ static async createPromoCode(req, res, next) {
 // Get all promo codes
 static async getAllPromoCodes(req, res, next) {
     try {
-        const promoCodes = await PromoCode.findAll();
+        const promoCodes = await PromoCode.findAll({
+            where: { isDeleted: false },
+        });
 
         res.status(200).json(promoCodes);
     } catch (error) {
@@ -658,12 +648,12 @@ static async getOrderDetailsByTicketNameAndFullName(req, res, next) {
             include: [
                 {
                     model: TicketPrice,
-                    as: 'ticketPrice',
+                    // as: 'ticketPrice',
                     include: [
                         {
                             model: Ticket,
-                            as: 'ticket',
-                            attributes: ['name'], // Fetch only the ticket name
+                            // as: 'ticket',
+                            // attributes: ['name'], // Fetch only the ticket name
                             where: { name: ticketName } // Filter by ticket name
                         }
                     ],
