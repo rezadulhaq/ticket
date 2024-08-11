@@ -1,5 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
     class OrderDetail extends Model {
         /**
@@ -8,18 +9,18 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            // define association here
             // Define associations here
             OrderDetail.belongsTo(models.Order, {
-                foreignKey: 'OrderId',
+                foreignKey: "OrderId",
                 // as: 'order',
             });
             OrderDetail.belongsTo(models.TicketPrice, {
-                foreignKey: 'TicketPriceId',
+                foreignKey: "TicketPriceId",
                 // as: 'ticketPrice',
             });
         }
     }
+
     OrderDetail.init(
         {
             lineId: DataTypes.STRING,
@@ -52,11 +53,22 @@ module.exports = (sequelize, DataTypes) => {
                 },
             },
             isDeleted: DataTypes.BOOLEAN,
+            hasAttended: {
+                type: DataTypes.BOOLEAN,
+                defaultValue: false,
+            },
         },
         {
+            hooks: {
+                beforeCreate(instance, option) {
+                    instance.isDeleted = false;
+                    instance.hasAttended = false;
+                },
+            },
             sequelize,
             modelName: "OrderDetail",
         }
     );
+
     return OrderDetail;
 };
