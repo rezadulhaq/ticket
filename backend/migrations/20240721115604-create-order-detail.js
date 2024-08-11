@@ -41,6 +41,10 @@ module.exports = {
             isDeleted: {
                 type: Sequelize.BOOLEAN,
             },
+            hasAttended: {
+                type: Sequelize.BOOLEAN,
+                defaultValue: false,
+            },
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE,
