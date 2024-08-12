@@ -12,27 +12,23 @@ export default function Invoice() {
         const doc = new jsPDF("p", "pt", "a4");
         const margin = 30;
         const ticketWidth = 500;
-        const ticketHeight = 150; // Reduced height
+        const ticketHeight = 220; // Adjusted height
         const pageWidth = doc.internal.pageSize.width;
         const pageHeight = doc.internal.pageSize.height;
         let yOffset = margin;
-        console.log(dataTicket,"JJJJJJJJJ");
+    
+        console.log(dataTicket, "JJJJJJJJJ");
+    
+        // Define column widths
+        const labelWidth = 150; // Width for labels to ensure alignment of ":"
+        const valueX = margin + labelWidth + 20; // X position for values
+    
         for (const [index, ticket] of dataTicket.entries()) {
             if (yOffset + ticketHeight + margin > pageHeight) {
                 doc.addPage();
                 yOffset = margin;
             }
-
-            // Add a border line
-            doc.setDrawColor(0);
-            doc.setLineWidth(1);
-            doc.line(
-                margin,
-                yOffset + ticketHeight + 10,
-                pageWidth - margin,
-                yOffset + ticketHeight + 10
-            );
-
+    
             // Add ticket title and slogan
             doc.setFontSize(16);
             doc.setFont("Arial", "bold");
@@ -40,23 +36,36 @@ export default function Invoice() {
             doc.setFontSize(12);
             doc.setFont("Arial", "italic");
             doc.text("Your Gateway to Innovation!", margin + 20, yOffset + 50);
-
+    
             // Add ticket details
             doc.setFontSize(12);
             doc.setFont("Arial", "normal");
-
+    
             // Biodata section
-            doc.text(`Name: ${ticket.fullName}`, margin + 20, yOffset + 80);
-            doc.text(`High School: ${ticket.highSchool}`, margin + 20, yOffset + 100);
-            doc.text(`Ticket Type: ${ticket.ticketName}`, margin + 20, yOffset + 120);
-            
+            const fields = [
+                { label: 'Name', value: ticket.fullName },
+                { label: 'Email', value: ticket.email },
+                { label: 'Line Id', value: ticket.lineId },
+                { label: 'Phone Number', value: ticket.phoneNumber },
+                { label: 'High School', value: ticket.highSchool },
+                { label: 'Ticket Type', value: ticket.ticketName }
+            ];
+    
+            fields.forEach((field, index) => {
+                const yPosition = yOffset + 80 + (index * 20); // Adjust vertical positioning
+                
+                // Add label and value to the PDF
+                doc.text(field.label.padEnd(labelWidth, ' '), margin, yPosition);
+                doc.text(`: ${field.value}`, margin + labelWidth, yPosition);
+            });
+    
             // Add QR code
             try {
                 const qrCodeDataUrl = await QRCode.toDataURL(
                     `http://localhost:3000/admin/get-data-qr?outputscan=Ticket-${ticket.ticketId}-${ticket.fullName}-${ticket.ticketName}`
                 );
                 const base64ImageData = qrCodeDataUrl.split(",")[1];
-
+    
                 doc.addImage(
                     base64ImageData,
                     "PNG",
@@ -68,12 +77,24 @@ export default function Invoice() {
             } catch (error) {
                 console.error("Error generating QR code:", error);
             }
-
+    
+            // Add a border line below the ticket
+            doc.setDrawColor(0);
+            doc.setLineWidth(1);
+            doc.line(
+                margin,
+                yOffset + ticketHeight + 10,
+                pageWidth - margin,
+                yOffset + ticketHeight + 10
+            );
+    
             yOffset += ticketHeight + margin;
         }
-
+    
         doc.save("tickets.pdf");
     };
+    
+
 
     return (
         <div className="backround-invoice p-8 w-full h-auto bg-gray-100">

@@ -120,20 +120,22 @@ const TicketPage = () => {
             })),
         };
 
-        let arrFullTicket = []
+        let arrFullTicket = [];
 
         for (let index = 0; index < payload.orderDetails.length; index++) {
             const orderUser = payload.orderDetails[index];
             for (let j = 0; j < payload.ticketdata.length; j++) {
                 const checkTicket = payload.ticketdata[j];
-                console.log(checkTicket, "HHHHHHHHHH");
                 if (orderUser.TicketPriceId == checkTicket.id) {
                     arrFullTicket.push({
                         fullName: orderUser.fullName,
                         highSchool: orderUser.highSchool,
+                        email: orderUser.email,
+                        lineId: orderUser.lineId,
+                        phoneNumber: orderUser.phoneNumber,
                         ticketName: checkTicket.ticket.name,
-                        ticketId: checkTicket.data.Ticket.id
-                    })
+                        ticketId: checkTicket.data.Ticket.id,
+                    });
                 }
             }
         }

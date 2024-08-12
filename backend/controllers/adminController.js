@@ -638,7 +638,7 @@ class AdminController {
         try {
             //outputscan =>> Ticket-ibrahim-ticketfebvip
             const { outputscan } = req.query;
-            console.log(outputscan, "yyyy");
+            // console.log(outputscan, "yyyy");
             let arrOutputScan = outputscan.split("-");
             let fullName = arrOutputScan[2];
             let ticketName = arrOutputScan[3];
@@ -652,7 +652,7 @@ class AdminController {
             }
 
             // Fetch order details
-            console.log(arrOutputScan, "KKKKKK");
+            // console.log(arrOutputScan, "KKKKKK");
             const orderDetail = await OrderDetail.findOne({
                 include: [
                     {
