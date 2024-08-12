@@ -16,7 +16,7 @@ export default function Invoice() {
         const pageWidth = doc.internal.pageSize.width;
         const pageHeight = doc.internal.pageSize.height;
         let yOffset = margin;
-
+        console.log(dataTicket,"JJJJJJJJJ");
         for (const [index, ticket] of dataTicket.entries()) {
             if (yOffset + ticketHeight + margin > pageHeight) {
                 doc.addPage();
@@ -53,7 +53,7 @@ export default function Invoice() {
             // Add QR code
             try {
                 const qrCodeDataUrl = await QRCode.toDataURL(
-                    `http://localhost:3000/admin/get-data-qr?Ticket-${ticket.fullName}-${ticket.ticketName}`
+                    `http://localhost:3000/admin/get-data-qr?outputscan=Ticket-${ticket.ticketId}-${ticket.fullName}-${ticket.ticketName}`
                 );
                 const base64ImageData = qrCodeDataUrl.split(",")[1];
 

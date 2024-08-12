@@ -26,29 +26,37 @@ export default function Qr() {
                 const response = await axios.get(
                     `http://localhost:3000/api/check-payment-status?qrCodeId=${qrData.id}`
                 );
-                // setData(response.data);
-                // console.log(response.data);
+                
+                // Mengecek status pembayaran
                 if (response.data.status === "INACTIVE") {
+                    // Menyiapkan data untuk POST request
                     let dataUser = {
                         userId: localStorage.getItem("UserId"),
                         orderDetails: qrData.dataTicket,
                     };
-                    // const responsePostOrder = await fetch(
-                    //     "http://localhost:3000/order",
-                    //     {
-                    //         method: "POST",
-                    //         headers: {
-                    //             "Content-Type": "application/json",
-                    //         },
-                    //         body: JSON.stringify(dataUser),
-                    //     }
-                    // );
-                    // if (!responsePostOrder.ok) {
-                    //     throw new Error("Network response was not ok");
-                    // }
+        
+                    // Mengirim data dengan metode POST
+                    const responsePostOrder = await fetch("http://localhost:3000/order", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(dataUser),
+                    });
+        
+                    // Memeriksa apakah POST request berhasil
+                    if (!responsePostOrder.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+        
+                    // Mengambil hasil dari POST request jika perlu
+                    const result = await responsePostOrder.json();
+                    console.log(result);
+        
+                    // Mengatur status pembayaran dan menangani pembayaran sukses
                     setPaymentStatus("INACTIVE");
-                    handlePaymentSuccess(); // Trigger navigation on successful payment
-                    clearInterval(intervalId);
+                    handlePaymentSuccess(); // Trigger navigasi pada pembayaran sukses
+                    clearInterval(intervalId); // Menghentikan interval pengecekan status pembayaran
                 }
             } catch (error) {
                 console.error("Error checking payment status:", error);

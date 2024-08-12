@@ -12,6 +12,7 @@ const {
     Invoice,
     PromoCode,
 } = require("../models/index");
+const { Op } = require("sequelize");
 const { hashPassword, compareHash } = require("../helpers/bycript");
 const { createToken } = require("../helpers/jwt");
 
@@ -637,9 +638,11 @@ class AdminController {
         try {
             //outputscan =>> Ticket-ibrahim-ticketfebvip
             const { outputscan } = req.query;
+            console.log(outputscan, "yyyy");
             let arrOutputScan = outputscan.split("-");
-            let fullName = arrOutputScan[1];
-            let ticketName = arrOutputScan[2];
+            let fullName = arrOutputScan[2];
+            let ticketName = arrOutputScan[3];
+            let ticketId = arrOutputScan[1];
             // const { ticketName, fullName } = req.query; // Assuming parameters are passed via query string
 
             if (!ticketName || !fullName) {
@@ -649,6 +652,7 @@ class AdminController {
             }
 
             // Fetch order details
+            console.log(arrOutputScan, "KKKKKK");
             const orderDetail = await OrderDetail.findOne({
                 include: [
                     {
@@ -656,15 +660,18 @@ class AdminController {
                         include: [
                             {
                                 model: Ticket,
-                                where: { name: ticketName }, // Filter by ticket name
+                                // FExB Talkshow + TROFI SNBT & SIMAK (11 Januari 2025)
+                                // Ticket-shelda-FExB Talkshow   TROFI SNBT
+                                where: { id: ticketId }, // Filter berdasarkan nama tiket
                             },
                         ],
-                        attributes: [],
+                    },
+                    {
+                        model: Order,
                     },
                 ],
                 where: {
                     fullName: fullName,
-                    isDeleted: false,
                 },
             });
 

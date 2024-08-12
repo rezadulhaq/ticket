@@ -126,11 +126,13 @@ const TicketPage = () => {
             const orderUser = payload.orderDetails[index];
             for (let j = 0; j < payload.ticketdata.length; j++) {
                 const checkTicket = payload.ticketdata[j];
+                console.log(checkTicket, "HHHHHHHHHH");
                 if (orderUser.TicketPriceId == checkTicket.id) {
                     arrFullTicket.push({
                         fullName: orderUser.fullName,
                         highSchool: orderUser.highSchool,
-                        ticketName: checkTicket.ticket.name
+                        ticketName: checkTicket.ticket.name,
+                        ticketId: checkTicket.data.Ticket.id
                     })
                 }
             }
