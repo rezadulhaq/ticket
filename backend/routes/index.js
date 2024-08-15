@@ -8,6 +8,7 @@ const adminRoutes = require("./adminroute");
 router.get("/user", UserController.getUsers);
 router.post("/user", UserController.createUsers);
 router.post("/user/login", UserController.loginUser);
+router.get("/user/:id", UserController.getUserById);
 router.put("/user/:id", UserController.updateUsersById);
 router.delete("/user/:id", UserController.deleteUsersById);
 

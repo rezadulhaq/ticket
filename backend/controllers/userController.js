@@ -26,6 +26,23 @@ class Controller {
         }
     }
 
+    static async getUserById(req, res, next) {
+        try {
+            const {id} = req.params
+            let data = await User.findOne({
+                where:{id}
+            });
+
+            res.status(200).json(data);
+            console.log(
+                "test controller in static getUser",
+                "<<<<<<<<<<<<<<<<<"
+            );
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     // register
     static async createUsers(req, res, next) {
         const t = await sequelize.transaction();

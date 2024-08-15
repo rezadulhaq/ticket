@@ -1,12 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { jsPDF } from "jspdf";
 import QRCode from "qrcode";
 import { useLocation } from "react-router-dom";
+import axios from "axios";
 
 export default function Invoice() {
     const location = useLocation();
     const { invoiceData = {} } = location.state || {};
     const { dataTicket = [] } = location.state || {}; // Data tiket yang tersedia
+    const [user, setUser] = useState({})
+    ;
+    useEffect(() => {
+        let dataUser = {};
+        const getUser = async () => {
+            try {
+                const userId = localStorage.getItem("UserId");
+                const response = await axios.get("http://localhost:3000/user/" + userId);
+                const data = response.data;
+                setUser(data);
+                console.log(data, "lololo");
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+            }
+        };
+        getUser();
+    }, []);
+
 
     const generatePDF = async () => {
         const doc = new jsPDF("p", "pt", "a4");
@@ -16,8 +35,8 @@ export default function Invoice() {
         const pageWidth = doc.internal.pageSize.width;
         const pageHeight = doc.internal.pageSize.height;
         let yOffset = margin;
-    
-        console.log(dataTicket, "JJJJJJJJJ");
+        const user= await getUser()
+        console.log(user, "JJJJJJJJJ");
     
         // Define column widths
         const labelWidth = 150; // Width for labels to ensure alignment of ":"
