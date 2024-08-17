@@ -449,7 +449,7 @@ class AdminController {
                     {
                         model: TicketPrice,
                         // as: "ticketPrices",
-                        attributes: ["id", "price", "totalTicket", "color"],
+                        attributes: ["id", "price", "totalTicket","CategoryId", "color"],
                     },
                 ],
             });
@@ -473,7 +473,7 @@ class AdminController {
                     {
                         model: TicketPrice,
                         // as: "ticketPrices",
-                        attributes: ["id", "price", "totalTicket", "color"],
+                        attributes: ["id", "price", "totalTicket","CategoryId", "color"],
                     },
                 ],
             });
