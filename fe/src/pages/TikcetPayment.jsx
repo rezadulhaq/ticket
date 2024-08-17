@@ -48,6 +48,7 @@ const TicketPage = () => {
         setTicket(dataTicket);
         setTotalTicket(countTicket);
         setAllTicket(formTicket(dataTicket));
+        console.log(dataTicket, "data Ticket");
     }, [selectedTickets, location]);
 
     function formTicket(allTicket) {
@@ -59,6 +60,8 @@ const TicketPage = () => {
                 let obj = {
                     name: el.Ticket.name,
                     type: el.Ticket.id,
+                    quantity: el.quantity,
+                    price: el.price,
                 };
                 arr.push(obj);
             }
