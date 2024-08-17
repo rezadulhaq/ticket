@@ -77,7 +77,7 @@ export default function LandingPage() {
         <div className="flex flex-col h-full text-white max-w-[250px] sm:max-w-xl">
           <div className="justify-start items-start sm:pl-10 pl-0 sm:pt-12 pt-4">
             <div>
-              <img className="sm:w-[400px] w-[110px] ml-12" src="https://ik.imagekit.io/x6p94nrv0m/Suport/website%20fexb%202024_page-0001.jpg?updatedAt=1722096324082" alt="" />
+              <img className="sm:w-[400px] w-[110px] ml-12" src="https://ik.imagekit.io/x6p94nrv0m/LOGO%20FEXB%202025%20(OUTLINED).png?updatedAt=1723660027248" alt="" />
               <p className="max-w-full sm:max-w-xl sm:text-lg text-xs mb-6 text-justify break-words px-4">
                 FEXB 2025 is an annual open house event that includes a try out simulation for UTBK and SIMAK UI as well as a faculty exhibition with fun rides, with the goal of providing a stimulating and enjoyable experience for all participants as they prepare for their future education. Furthermore, FEXB 2025 will feature an interactive discussion show and activities that will offer participants a taste of how college will function, allowing them to begin their dream with us.
               </p>
@@ -94,13 +94,17 @@ export default function LandingPage() {
           <div className="sm:mt-20 mt-3 sm:w-[350px] w-36">
             <img src="https://ik.imagekit.io/x6p94nrv0m/Group%2076.png?updatedAt=1720458973043" alt="" className="w-full h-full" />
           </div>
-          <div className="bg-white sm:p-2 p-1 rounded-lg shadow-md sm:w-2/5 w-full sm:h-[250px] h-[200px]  mb-4 flex flex-col justify-end text-center text-black mx-auto">
+          <div className="bg-white sm:p-2 p-1 rounded-lg shadow-md sm:w-2/5 w-full sm:h-[250px] h-[200px] mb-4 flex flex-col justify-end text-center text-black mx-auto">
   <h2 className="text-lg font-bold">After movie</h2>
   <div className="relative w-full h-full">
-    <video className="absolute inset-0 w-full h-full object-cover" controls>
-      <source src="" type="video/mp4" />
-      Your browser does not support the video tag.
-    </video>
+    <iframe
+      className="absolute inset-0 w-full h-full"
+      src="https://www.youtube.com/embed/QjVfklHz3ck"
+      frameBorder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowFullScreen
+      title="YouTube video"
+    ></iframe>
   </div>
 </div>
 

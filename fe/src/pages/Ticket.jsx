@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { FiArrowLeft } from 'react-icons/fi';
 
 const Tickets = () => {
     // const navigate = useNavigate();
@@ -19,7 +20,7 @@ const Tickets = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch("http://localhost:3000/category");
+                const response = await fetch("https://backend.fexbfebui.id/category");
                 if (!response.ok) {
                     throw new Error("Failed to fetch data");
                 }
@@ -88,6 +89,16 @@ const Tickets = () => {
 
     return (
         <div className="sm:bg-desktopTicket bg-mobileTicket w-full h-auto bg-center bg-repeat bg-cover p-4 sm:p-8">
+            <div onClick={() => navigate('/')} >
+            <button
+                // Navigate to home
+                className=" top-4 left-4 px-4 py-2 bg-gray-800 text-white rounded-lg shadow-md hover:bg-gray-700  flex items-center space-x-2"
+            >
+                <FiArrowLeft size={20} />  
+                <span>Back</span>
+            </button> 
+            </div>
+             
             <div className="max-w-4xl mx-auto flex flex-col">
                 <div className="relative mb-8 text-center">
                     <div

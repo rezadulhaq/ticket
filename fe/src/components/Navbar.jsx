@@ -20,9 +20,9 @@ const Navbar = () => {
         <div className="flex items-center cursor-pointer">
           <img 
             onClick={() => navigate('/')} 
-            src="https://ik.imagekit.io/x6p94nrv0m/Group%2066.png?updatedAt=1720116453393" 
+            src="https://ik.imagekit.io/x6p94nrv0m/LOGO%20FEXB%202025%20(OUTLINED).png?updatedAt=1723660027248" 
             alt="Logo" 
-            className="w-24" 
+            className="w-28" 
           />
         </div>
         <div className="flex space-x-4">

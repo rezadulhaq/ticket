@@ -25,7 +25,8 @@ export default {
         'mobileTicket': "url('https://ik.imagekit.io/x6p94nrv0m/CHOOSE%20TICKET%20PAGE%20-%20MOBILE.png?updatedAt=1720980514562')",
         'desktopTicket': "url('https://ik.imagekit.io/x6p94nrv0m/CHOOSE%20TICKET%20PAGE%20-%20DESKTOP.png?updatedAt=1720551963335')",
         'desktopInvoice': "url('https://ik.imagekit.io/x6p94nrv0m/INVOICE%20-%20DESKTOP.png?updatedAt=1720784842414')",
-        'mobileInvoice' : "url('https://ik.imagekit.io/x6p94nrv0m/summary%20page%20-%20verrys%20(1).png?updatedAt=1721237202236')"
+        'mobileInvoice' : "url('https://ik.imagekit.io/x6p94nrv0m/summary%20page%20-%20verrys%20(1).png?updatedAt=1721237202236')",
+        'TicketIncoice' : "url('https://ik.imagekit.io/x6p94nrv0m/tikettt%20(1).png?updatedAt=1720786455709')"
       }),
     },
   },

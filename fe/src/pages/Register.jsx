@@ -39,7 +39,7 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch("http://localhost:3000/user", {
+            const response = await fetch("https://backend.fexbfebui.id/user", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -77,7 +77,7 @@ const Register = () => {
       }, [formData.password, formData.confirmedPassword]);
     return (
         <div
-            className="min-h-screen bg-cover bg-center flex items-center justify-center"
+            className="min-h-screen bg-cover bg-center flex flex-col items-center justify-center"
             style={{
                 backgroundImage:
                     "url('https://ik.imagekit.io/x6p94nrv0m/LOGIN%20PAGE%20-%20DESKTOP%20(1).png?updatedAt=172054304876')",
