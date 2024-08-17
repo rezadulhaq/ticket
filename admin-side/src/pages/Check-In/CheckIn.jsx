@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import QrScanner from "qr-scanner";
 import { FaUserCircle, FaQrcode, FaStop } from "react-icons/fa";
+import {  toast } from 'react-toastify';
+
 
 let stopScan = false;
 let hasilScan = "";
 
-function CheckIn() {
+export default function CheckIn() {
   const [btnScan, setBtnScan] = useState(true);
-
+  const [orderDetails, setOrderDetails] = useState(null);
+  console.log(orderDetails)
   const scanNow = async (isScan) => {
     setBtnScan(isScan);
     if (isScan) stopScan = true;
@@ -17,10 +20,31 @@ function CheckIn() {
     const videoElement = document.getElementById('scanView');
     const scanner = new QrScanner(
       videoElement,
-      result => {
+      async result => {
         hasilScan = result.data;
         setBtnScan(true);
         stopScan = true;
+        
+        // Fetch data from the server when QR code is scanned
+        console.log(hasilScan);
+        
+        if (hasilScan) {
+          try {
+            const response = await fetch(hasilScan, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ qrData: hasilScan }),
+            });
+            const data = await response.json();
+            setOrderDetails(data);
+            toast.success('Scan successful!'); // Menampilkan toast notification
+          } catch (error) {
+            console.error('Error fetching order details:', error);
+            toast.error('Error fetching order details'); // Menampilkan toast error
+          }
+        }
       },
       {
         onDecodeError: error => {
@@ -56,9 +80,28 @@ function CheckIn() {
           ></video>
         )}
         {btnScan && (
-          <div className="p-4">
+          <div className="p-4 w-full">
             <h2 className="text-xl">Hasil Scan:</h2>
             <p className="mt-2 text-lg">{hasilScan}</p>
+            {orderDetails && (
+    <div className="mt-4 bg-gray-200 p-3 w-full">
+        <h3 className="text-lg font-bold">Order Details:</h3>
+        <p><strong>Full Name:</strong> {orderDetails.fullName}</p>
+        <p><strong>Phone Number:</strong> {orderDetails.phoneNumber}</p>
+        <p><strong>Email:</strong> {orderDetails.email}</p>
+        <p><strong>High School:</strong> {orderDetails.highSchool}</p>
+        {/* <p><strong>Ticket Name:</strong> {orderDetails.TicketPrice.Ticket.name}</p>
+        <p><strong>Ticket Price:</strong> {orderDetails.TicketPrice.price}</p> */}
+        <p>
+            <strong>Status Scan:</strong> {orderDetails.hasAttended ? 'Sudah Scan' : 'Belum Scan'}
+        </p>
+        {/* <p><strong>Order ID:</strong> {orderDetails.OrderId}</p> */}
+        {/* <p><strong>Ticket Price ID:</strong> {orderDetails.TicketPriceId}</p> */}
+        {/* <p><strong>Created At:</strong> {new Date(orderDetails.createdAt).toLocaleString()}</p> */}
+        {/* <p><strong>Updated At:</strong> {new Date(orderDetails.updatedAt).toLocaleString()}</p> */}
+    </div>
+)}
+
           </div>
         )}
       </main>
@@ -68,8 +111,9 @@ function CheckIn() {
       >
         {btnScan ? <FaQrcode className="text-2xl" /> : <FaStop className="text-2xl" />}
       </button>
+
     </div>
   );
 }
 
-export default CheckIn;
+

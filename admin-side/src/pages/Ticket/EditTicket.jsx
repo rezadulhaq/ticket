@@ -26,8 +26,10 @@ export default function EditTicket({ id }) {
       // Fetch ticket data if an ID is present
       const fetchTicketData = async () => {
         try {
-          const response = await axios.get(`http://localhost:3000/admin/tickets/${id}`);
+          const response = await axios.get(`https://backend.fexbfebui.id/admin/tickets/${id}`);
+          
           const { data } = response;
+          console.log(data);
           setTicketData({
             name: data.name,
             quantity: data.quantity,
@@ -74,7 +76,8 @@ export default function EditTicket({ id }) {
     setTicketPrices(newTicketPrices);
   };
 
-  const BASE_URL = 'http://localhost:3000';
+  // const BASE_URL = 'http://localhost:3000';
+  const BASE_URL = 'https://backend.fexbfebui.id'
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -115,6 +118,7 @@ export default function EditTicket({ id }) {
     }
   };
   
+console.log(ticketPrices);
 
   return (
     <div>
@@ -159,19 +163,19 @@ export default function EditTicket({ id }) {
             {ticketPrices?.map((ticketPrice, index) => (
               <div key={index} className="mb-4 border-t border-gray-200 pt-4">
                 <div className="flex items-center space-x-2 mb-2">
-                  <h3 className="text-lg font-semibold">Price {index + 1}</h3>
-                  <button
+                  <h3 className="text-lg font-semibold">Tiket Price {index + 1}</h3>
+                  {/* <button
                     type="button"
                     onClick={() => handleRemoveTicketPrice(index)}
                     className="text-red-500 hover:text-red-700"
                   >
                     <FaTrash />
-                  </button>
+                  </button> */}
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-gray-700 text-sm font-bold mb-2">
-                      Price
+                      TiketPrice
                     </label>
                     <input
                       type="number"
@@ -195,6 +199,24 @@ export default function EditTicket({ id }) {
                       required
                     />
                   </div>
+                  <div className="flex-1">
+    <label className="block text-gray-700 text-sm font-bold mb-2">
+        Color
+    </label>
+    <select
+        name="color"
+        value={ticketPrice.color}
+        onChange={(e) => handleTicketPriceChange(index, e)}
+        className="input input-bordered w-full"
+        required
+    >
+       <option value="">Select a Color</option>
+        <option value='bg-[#8EDB8C]'>Green</option>
+        <option value='bg-[#A82E9F]'>Purple</option>
+        <option value='bg-[#1070D1]'>Blue</option>
+        <option value='bg-[#F4CD5C]'>Yellow</option>
+    </select>
+</div>
                   <div>
                     <label className="block text-gray-700 text-sm font-bold mb-2">
                       Category
@@ -229,19 +251,19 @@ export default function EditTicket({ id }) {
               </div>
             ))}
 
-            <button
+            {/* <button
               type="button"
               onClick={handleAddTicketPrice}
               className="btn bg-green-500 text-white hover:bg-green-700 flex items-center space-x-2"
             >
               <FaPlus /> <span>Add Ticket Price</span>
-            </button>
+            </button> */}
 
             <div className="flex justify-end mt-6">
               <button
                 type="button"
                 onClick={() => document.getElementById(`Edit_Ticket_${id}`).close()}
-                className="btn btn-secondary text-white"
+                className="btn bg-gray-500 text-white"
               >
                 <FaTimes /> Close
               </button>

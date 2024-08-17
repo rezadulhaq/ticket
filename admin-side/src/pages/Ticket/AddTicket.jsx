@@ -12,7 +12,7 @@ export default function AddTicket() {
     quantity: '',
     // Add other ticket fields as needed
   });
-  const [ticketPrices, setTicketPrices] = useState([{ price: '', totalTicket: '', CategoryId: '', isDeleted: false }]);
+  const [ticketPrices, setTicketPrices] = useState([{ price: '', totalTicket: '', CategoryId: '', isDeleted: false ,color : ''}]);
   const [loading, setLoading] = useState(false);
   const { categoryTickets } = useSelector(state => state.categoryTickets);
 
@@ -36,7 +36,7 @@ export default function AddTicket() {
   };
 
   const handleAddTicketPrice = () => {
-    setTicketPrices([...ticketPrices, { price: '', totalTicket: '', CategoryId: '', isDeleted: false }]);
+    setTicketPrices([...ticketPrices, { price: '', totalTicket: '', CategoryId: '', isDeleted: false,color: '' }]);
   };
 
   const handleRemoveTicketPrice = (index) => {
@@ -45,7 +45,8 @@ export default function AddTicket() {
     setTicketPrices(newTicketPrices);
   };
 
-  const BASE_URL = 'http://localhost:3000';
+  // const BASE_URL = 'http://localhost:3000';
+  const BASE_URL = 'https://backend.fexbfebui.id'
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -144,7 +145,24 @@ export default function AddTicket() {
                           required
                         />
                       </div>
-
+                      <div className="flex-1">
+    <label className="block text-gray-700 text-sm font-bold mb-2">
+        Color
+    </label>
+    <select
+        name="color"
+        value={price.color}
+        onChange={(e) => handleTicketPriceChange(index, e)}
+        className="input input-bordered w-full"
+        required
+    >
+       <option value="">Select a Color</option>
+        <option value='bg-[#8EDB8C]'>Green</option>
+        <option value='bg-[#A82E9F]'>Purple</option>
+        <option value='bg-[#1070D1]'>Blue</option>
+        <option value='bg-[#F4CD5C]'>Yellow</option>
+    </select>
+</div>
                       <div className="flex-1">
                         <label className="block text-gray-700 text-sm font-bold mb-2">
                           Category

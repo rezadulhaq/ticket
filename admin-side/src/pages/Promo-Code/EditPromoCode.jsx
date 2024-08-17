@@ -8,7 +8,8 @@ export default function EditPromo({ id, promo }) {
   const [formData, setFormData] = useState({
     name: '',
   });
-const BASE_URL = 'http://localhost:3000'
+// const BASE_URL = 'http://localhost:3000'
+const BASE_URL = 'https://backend.fexbfebui.id'
   useEffect(() => {
     if (promo) {
       setFormData({ name: promo.name });

@@ -1,7 +1,8 @@
 import { toast } from "react-toastify";
 import { ADD_PROMO, DELETE_CATEGORY, DELETE_PROMO, DELETE_TICKETS, EDIT_CATEGORY, LOGIN_ADMIN, POST_CATEGORY, READ_CATEGORY_TICKET, READ_ORDER, READ_PROMO, READ_TICKETS, READ_USERS, REGISTER_ADMIN } from "./actionType";
 
-const BASE_URL = 'http://localhost:3000'
+// const BASE_URL = 'http://localhost:3000'
+const BASE_URL = 'https://backend.fexbfebui.id'
 export const actionGenerator = (type,payload) => {
     return {
         type,

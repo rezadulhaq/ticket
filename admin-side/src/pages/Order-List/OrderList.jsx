@@ -2,10 +2,12 @@ import React, { useEffect } from 'react';
 import Header from '../../components/Header';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchOrder } from '../../stores/actionCreator';
-
+import { FaCheck } from 'react-icons/fa';
+import { FaTimes } from 'react-icons/fa';
 export default function OrderList() {
   const dispatch = useDispatch();
   const { Orders } = useSelector(state => state.Orders);
+console.log(Orders);
 
   useEffect(() => {
     dispatch(fetchOrder());
@@ -31,17 +33,27 @@ export default function OrderList() {
                   Ticket ID
                 </th>
                 <th className="py-2 px-4 border-b-2 border-gray-200 bg-gray-200 text-left text-sm font-semibold text-gray-700">
-                  Title
+                  Name
                 </th>
                 <th className="py-2 px-4 border-b-2 border-gray-200 bg-gray-200 text-left text-sm font-semibold text-gray-700">
-                  Status
+                  Email
                 </th>
+                <th className="py-2 px-4 border-b-2 border-gray-200 bg-gray-200 text-left text-sm font-semibold text-gray-700">
+                  Line Id
+                </th>
+                <th className="py-2 px-4 border-b-2 border-gray-200 bg-gray-200 text-left text-sm font-semibold text-gray-700">
+                  Phone Number
+                </th>
+                <th className="py-2 px-4 border-b-2 border-gray-200 bg-gray-200 text-left text-sm font-semibold text-gray-700">
+                  High School
+                </th>
+                {/* <th className="py-2 px-4 border-b-2 border-gray-200 bg-gray-200 text-left text-sm font-semibold text-gray-700">
+                  Scan
+                </th> */}
                 <th className="py-2 px-4 border-b-2 border-gray-200 bg-gray-200 text-left text-sm font-semibold text-gray-700">
                   Created At
                 </th>
-                <th className="py-2 px-4 border-b-2 border-gray-200 bg-gray-200 text-left text-sm font-semibold text-gray-700">
-                  Actions
-                </th>
+
               </tr>
             </thead>
             <tbody>
@@ -58,28 +70,31 @@ export default function OrderList() {
                       {ticket.id}
                     </td>
                     <td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
-                      {ticket.title}
+                      {ticket.fullName}
                     </td>
                     <td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
-                      {ticket.status}
+                      {ticket.email}
                     </td>
+                    <td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
+                      {ticket.lineId}
+                    </td>
+                    <td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
+                      {ticket.phoneNumber}
+                    </td>
+                    <td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
+                      {ticket.highSchool}
+                    </td>
+                    {/* <td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
+  {ticket.hasAttended ? (
+    <FaCheck className="text-green-500" />
+  ) : (
+    <FaTimes className="text-red-500" />
+  )}
+</td> */}
                     <td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
                       {new Date(ticket.createdAt).toLocaleDateString()}
                     </td>
-                    <td className="py-2 px-4 border-b border-gray-200 text-sm text-gray-700">
-                      <button
-                        onClick={() => handleEdit(ticket.id)}
-                        className="mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(ticket.id)}
-                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
-                      >
-                        Delete
-                      </button>
-                    </td>
+
                   </tr>
                 ))
               )}
