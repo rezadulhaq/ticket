@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { jsPDF } from "jspdf";
 import QRCode from "qrcode";
-import { useLocation, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { FaInfoCircle } from 'react-icons/fa';
 import { useLocation } from "react-router-dom";
 import axios from "axios";
@@ -50,8 +50,8 @@ export default function Invoice() {
         // console.log(dataTicket, "JJJJJJJJJ");
 
         
-        const user= await getUser()
-        console.log(user, "JJJJJJJJJ")
+        // const user= await getUser()
+        // console.log(user, "JJJJJJJJJ")
         const labelWidth = 150; // Width for labels to ensure alignment of ":"
         const valueX = margin + labelWidth + 20; // X position for values
     

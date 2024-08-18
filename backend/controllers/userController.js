@@ -155,7 +155,7 @@ class Controller {
     static async loginUser(req, res, next) {
         try {
             const { email, password } = req.body;
-            const data = await User.findOne({ where: { email } });
+            const data = await await User.scope('withPassword').findOne({ where: { email } });
             console.log({data})
 
             if (!data) {
@@ -163,7 +163,7 @@ class Controller {
                     name: "User not found",
                 };
             }
-
+            console.log(data, "}}}}}}}}}}}}}}}}");
             const compare = compareHash(password, data?.password);
 
             if (!compare) {

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const AdminController = require("../controllers/adminController");
-
+const OrderController = require('../controllers/orderController');
 // Admin Routes
 
 // Admin Authentication Routes
@@ -31,6 +31,8 @@ router.delete("/ticket-prices/:id", AdminController.deleteTicketPrice); // Delet
 router.get("/users", AdminController.getUsers); // Get All Users
 router.get("/order-details", AdminController.getAllOrderDetails); // Get All OrderDetails
 
+router.get('/order', OrderController.getAllOrders);
+router.get('/order/:orderId', OrderController.getOrderById);
 // Promo Code Endpoints
 router.post("/promo-codes", AdminController.createPromoCode);
 router.get("/promo-codes", AdminController.getAllPromoCodes);

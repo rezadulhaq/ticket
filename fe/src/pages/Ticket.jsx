@@ -20,7 +20,7 @@ const Tickets = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch("https://backend.fexbfebui.id/category");
+                const response = await fetch("http://localhost:3000/category");
                 if (!response.ok) {
                     throw new Error("Failed to fetch data");
                 }

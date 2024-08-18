@@ -19,6 +19,11 @@ router.get("/ticket/:id", TicketController.getTicketById);
 router.get("/ticket-promo/:name", OrderController.checkPromoCode);
 router.get("/category", TicketController.getAllCategoryTicket);
 router.post("/order", OrderController.createOrder);
+
+router.get('/order', OrderController.getAllOrders);
+router.get('/order/user/:userId', OrderController.getOrdersByUserId);
+router.get('/order/:orderId', OrderController.getOrderById);
+
 router.post("/api/create-payment", OrderController.paymentGateWay);
 router.get("/api/generateQR", OrderController.generateQRCode);
 router.get("/api/check-payment-status", OrderController.checkPaymentStatus);

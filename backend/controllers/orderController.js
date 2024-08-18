@@ -119,7 +119,7 @@ class Controller {
             const createdInvoice = await invoice.createInvoice(invoiceData);
 
             res.json({ invoiceUrl: createdInvoice.invoice_url });
-            console.log(invoiceUrl, "????????????????");
+            // console.log(invoiceUrl, "????????????????");
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: "Failed to create payment" });
@@ -152,6 +152,7 @@ class Controller {
                     fullName,
                     email,
                     phoneNumber,
+                    parentPhoneNumber,
                     highSchool,
                 } = detail;
 
@@ -187,6 +188,7 @@ class Controller {
                         fullName,
                         email,
                         phoneNumber,
+                        parentPhoneNumber,
                         highSchool,
                         OrderId: order.id,
                         TicketPriceId: ticket.id,
@@ -208,6 +210,82 @@ class Controller {
             // Rollback transaksi jika terjadi error
             if (t) await t.rollback();
             res.status(500).json({ error: "error" });
+        }
+    }
+
+    // Endpoint untuk mendapatkan semua pesanan
+    static async getAllOrders(req, res, next) {
+        try {
+            const orders = await Order.findAll({
+                include: [
+                    {
+                        model: OrderDetail,
+                        // as: "orderDetails",
+                    },
+                ],
+            });
+            res.status(200).json(orders);
+        } catch (error) {
+            console.error("Error fetching orders:", error);
+            res.status(500).json({ message: "Internal Server Error" });
+        }
+    }
+
+    // Endpoint untuk mendapatkan pesanan berdasarkan userId
+    static async getOrdersByUserId(req, res, next) {
+        const { userId } = req.params;
+        console.log(userId, req.params);
+        try {
+            const orders = await Order.findAll({
+                where: { UserId: userId },
+                include: [
+                    {
+                        model: OrderDetail,
+                        include: [
+                            {
+                                model: TicketPrice,
+                                include: [
+                                    {
+                                        model: Ticket,
+                                    },
+                                ],
+                            },
+                        ],
+                        // as: "orderDetails",
+                    },
+                ],
+            });
+            if (orders.length === 0) {
+                return res
+                    .status(404)
+                    .json({ message: "No orders found for this user" });
+            }
+            res.status(200).json(orders);
+        } catch (error) {
+            console.error("Error fetching orders for user:", error);
+            res.status(500).json({ message: "Internal Server Error" });
+        }
+    }
+
+    // Endpoint untuk mendapatkan pesanan berdasarkan orderId
+    static async getOrderById(req, res, next) {
+        const { orderId } = req.params;
+        try {
+            const order = await Order.findByPk(orderId, {
+                include: [
+                    {
+                        model: OrderDetail,
+                        // as: "orderDetails",
+                    },
+                ],
+            });
+            if (!order) {
+                return res.status(404).json({ message: "Order not found" });
+            }
+            res.status(200).json(order);
+        } catch (error) {
+            console.error("Error fetching order by ID:", error);
+            res.status(500).json({ message: "Internal Server Error" });
         }
     }
 }

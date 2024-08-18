@@ -6,6 +6,7 @@ import Tickets from "../pages/Ticket";
 import TicketPage from "../pages/TikcetPayment";
 import Qr from "../pages/Qr";
 import Invoice from "../pages/Invoice";
+import MyOrders from "../pages/MyOrder";
 
 const checkAuth = () => {
     const isAuthenticated = !!localStorage.getItem("access_token");
@@ -29,6 +30,11 @@ const router = createBrowserRouter([
     {
         path: "/ticket-page",
         element: <TicketPage />,
+        loader: checkAuth,  // Add this loader to restrict access
+    },
+    {
+        path: "/my-orders",
+        element: <MyOrders />,
         loader: checkAuth,  // Add this loader to restrict access
     },
     {

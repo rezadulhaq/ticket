@@ -24,7 +24,8 @@ export default function Qr() {
         const checkPaymentStatus = async () => {
             try {
                 const response = await axios.get(
-                    `https://backend.fexbfebui.id/api/check-payment-status?qrCodeId=${qrData.id}`
+                    `http://localhost:3000/api/check-payment-status?qrCodeId=${qrData.id}`
+                    // `https://backend.fexbfebui.id/api/check-payment-status?qrCodeId=${qrData.id}`
                 );
                 
                 // Mengecek status pembayaran
@@ -36,7 +37,7 @@ export default function Qr() {
                     };
         
                     // Mengirim data dengan metode POST
-                    const responsePostOrder = await fetch("https://backend.fexbfebui.id/order", {
+                    const responsePostOrder = await fetch("http://localhost:3000/order", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",

@@ -24,6 +24,7 @@ const TicketPage = () => {
             fullName: "",
             idLine: "",
             phoneNumber: "",
+            parentPhoneNumber: "", //menambahkan parent phone number
             email: "",
             highSchool: "",
         }))
@@ -91,7 +92,8 @@ const TicketPage = () => {
     const handleReferralCode = async () => {
         try {
             const response = await axios.get(
-                "https://backend.fexbfebui.id/ticket-promo/" + referralCode
+                "http://localhost:3000/ticket-promo/" + referralCode
+                // "https://backend.fexbfebui.id/ticket-promo/" + referralCode
             );
             const { isValid, discountAmount } = {
                 isValid: response.data.status,
@@ -136,6 +138,7 @@ const TicketPage = () => {
                 email: item.email,
                 phoneNumber: item.phoneNumber,
                 highSchool: item.highSchool,
+                parentPhoneNumber: item.parentPhoneNumber
             })),
         };
 
@@ -155,6 +158,7 @@ const TicketPage = () => {
                         email: orderUser.email,
                         lineId: orderUser.lineId,
                         phoneNumber: orderUser.phoneNumber,
+                        parentPhoneNumber: orderUser.parentPhoneNumber, //menambahkan nomor ortu
                         ticketName: checkTicket.ticket.name,
                         price : checkTicket.data.price,
                         quantity : checkTicket.quantity,
@@ -167,7 +171,8 @@ const TicketPage = () => {
 
         try {
             const response = await axios.post(
-                "https://backend.fexbfebui.id/create-qr-code/",
+                "http://localhost:3000/create-qr-code/",
+                // "https://backend.fexbfebui.id/create-qr-code/",
                 payload
             );
             // console.log("Order created successfully:", response.data);
@@ -278,6 +283,35 @@ const TicketPage = () => {
                         (formDataRef.current[
                             ticketIndex
                         ].phoneNumber = e.target.value)
+                    }
+                    className="w-full px-4 py-2 border rounded"
+                    style={{
+                        color: "black",
+                        backgroundColor: "white",
+                    }}
+                    required
+                />
+            </div>
+            <div className="col-span-1">
+                <label
+                    htmlFor={`phone-${ticketIndex}`}
+                    className="block"
+                >
+                   Parent Phone Number
+                </label>
+                <input
+                    id={`phone-${ticketIndex}`}
+                    name="parentPhoneNumber"
+                    type="text"
+                    placeholder="Enter Phone Number"
+                    defaultValue={
+                        formDataRef.current[ticketIndex]
+                            .parentPhoneNumber || ""
+                    }
+                    onChange={(e) =>
+                        (formDataRef.current[
+                            ticketIndex
+                        ].parentPhoneNumber = e.target.value)
                     }
                     className="w-full px-4 py-2 border rounded"
                     style={{
